@@ -1,0 +1,19 @@
+.navbarDiv {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+.navbarDiv h1 {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    color: #a1887f;
+}
+.settingsAnchor {
+    margin-left: auto;
+    color: #a1887f;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}

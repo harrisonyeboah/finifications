@@ -1,0 +1,76 @@
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+.loginBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+}
+
+.loginButton {
+    background-color: #ffffff;
+    color: #a1887f;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+.loginInput {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none #a1887f;
+    width: 300px;
+    margin-bottom: 10px;
+}
+.loginInput:hover {
+    border: .5px solid #a1887f;
+
+}
+
+.loginInput::placeholder {
+    color: #a1887f;
+}
+
+
+.loginMessage {
+    color: #a1887f;;
+    margin-bottom: 10px;
+}
+.loginAchor {
+    color: #a1887f;;
+    text-decoration: none;
+    margin: 0 10px;
+    text-decoration: underline;
+    font-size: 10px;
+}
+.loginAchor:hover {
+    color: #555555;
+    transition: 0.3s;
+    cursor: pointer;
+    font-size: 10.5px;
+}
+
+.loginButton:hover {
+    color: #555555;
+    transition: 0.3s;
+    cursor: pointer;
+    font-size: 14px;
+}
+.loginHeader {
+    font-size: 24px;
+    font-weight: bold;
+    color: #a1887f;
+    margin-bottom: 20px;
+}
