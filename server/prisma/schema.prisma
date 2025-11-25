@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  firstName  String
+  lastName   String
+  userName   String   @unique
+  password   String
+  email      String   @unique
+  phone      String?
+  dateJoined DateTime @default(now())
+  isPremium  Boolean  @default(false)
+
+  watchlist  StockWatchlist[] // This allows for our joins
+}
+
+
+model StockWatchlist {
+  id          String   @id @default(uuid())
+  userId      String
+  stockTicker String
+
+  // Relation to User
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // This is the stock watchlist
+}

@@ -1,26 +1,33 @@
 const express = require('express');
 const cors = require('cors');
+const { PrismaClient } = require('./src/generated/client');
+const prisma = new PrismaClient();
+
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Routes
+
 app.get('/api/hello', (req, res) => {
-    res.json({ message: 'Hello from Express server!' });
+    res.json({ message: 'Hello from the server!' });
 });
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+
+app.get("/test-db", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+    if (!users.length) {
+        console.log("No users found");      
+        return res.status(404).json({ message: "No users found" });  
+    }
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

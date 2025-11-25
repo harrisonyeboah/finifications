@@ -12,7 +12,7 @@ function App() {
 
     useEffect(() => {
         // Example: Fetch data from the server
-        fetch('http://localhost:3001/api/hello')
+        fetch('http://localhost:8080/api/hello')
             .then(response => response.json())
             .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));
