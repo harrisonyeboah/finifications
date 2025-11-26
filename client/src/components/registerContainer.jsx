@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 function RegisterContainer() {
+    const navigate = useNavigate();
     const [message, setMessage] = useState(" This username is already taken");
     const [userInfo, setUserInfo] = useState({
         firstName: "",
@@ -44,6 +46,8 @@ function RegisterContainer() {
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Registration failed");
+            } else {
+                navigate('/login'); 
             }
             console.log("User Info Submitted:", userInfo);
             // Reset form after submission

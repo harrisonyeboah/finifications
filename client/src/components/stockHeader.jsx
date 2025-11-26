@@ -1,3 +1,4 @@
+import "../Styles/Dashboard.css";
 function StockHeader(props) {
     const { ticker, price } = props;
     return (

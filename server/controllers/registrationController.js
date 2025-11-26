@@ -21,10 +21,10 @@ class RegistrationController {
     constructor(prisma) {
         this.prisma = prisma;
         this.router = express.Router();
-        this.router.post('/api/register', this.preVerification.bind(this));
+        this.router.post('/api/register', this.register.bind(this));
     }
 
-    async preVerification(req, res) {
+    async register(req, res) {
         const { firstName, lastName, username, password, email, phone } = req.body;
         console.log("Received registration data:", req.body);
 

@@ -1,3 +1,4 @@
+import "../Styles/Dashboard.css";
 function StockVisualization(props) {
     const {ticker, last} = props;
     // There will probably be more based on the api that we are fetching from.

@@ -1,3 +1,4 @@
+import "../Styles/Dashboard.css";
 function StockWatchlistItem(props) {
     const {ticker, price, id} = props; // This will based on the api data etc. 
     return (

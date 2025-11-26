@@ -1,5 +1,10 @@
+// Installing my dependencies
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 function LoginContainer() {
+    const navigate = useNavigate();
     const [message, setMessage] = useState("");
     const [userInfo, setUserInfo] = useState({
         username: "",
@@ -22,14 +27,19 @@ function LoginContainer() {
             // This will send my api call to the backend. 
             const response = await fetch("http://localhost:8080/api/login", {
                 method: "POST",
+                credentials: 'include',
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(userInfo)
             }); 
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Login failed");
+            } 
+            else {
+                setMessage("Login successful!");
+                navigate('/dashboard'); // Redirect to dashboard or another page
             }
             console.log("User Info Submitted:", userInfo);
             // Reset form after submission
