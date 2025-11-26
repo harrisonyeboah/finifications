@@ -27,6 +27,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     phone: string | null
     dateJoined: Date
     isPremium: boolean
+    isVerified: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1070,6 +1071,7 @@ export namespace Prisma {
     phone: string | null
     dateJoined: Date | null
     isPremium: boolean | null
+    isVerified: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1082,6 +1084,7 @@ export namespace Prisma {
     phone: string | null
     dateJoined: Date | null
     isPremium: boolean | null
+    isVerified: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1094,6 +1097,7 @@ export namespace Prisma {
     phone: number
     dateJoined: number
     isPremium: number
+    isVerified: number
     _all: number
   }
 
@@ -1108,6 +1112,7 @@ export namespace Prisma {
     phone?: true
     dateJoined?: true
     isPremium?: true
+    isVerified?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1120,6 +1125,7 @@ export namespace Prisma {
     phone?: true
     dateJoined?: true
     isPremium?: true
+    isVerified?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1132,6 +1138,7 @@ export namespace Prisma {
     phone?: true
     dateJoined?: true
     isPremium?: true
+    isVerified?: true
     _all?: true
   }
 
@@ -1218,6 +1225,7 @@ export namespace Prisma {
     phone: string | null
     dateJoined: Date
     isPremium: boolean
+    isVerified: boolean
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1247,6 +1255,7 @@ export namespace Prisma {
     phone?: boolean
     dateJoined?: boolean
     isPremium?: boolean
+    isVerified?: boolean
     watchlist?: boolean | User$watchlistArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -1261,6 +1270,7 @@ export namespace Prisma {
     phone?: boolean
     dateJoined?: boolean
     isPremium?: boolean
+    isVerified?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -2961,7 +2971,8 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     dateJoined: 'dateJoined',
-    isPremium: 'isPremium'
+    isPremium: 'isPremium',
+    isVerified: 'isVerified'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -3018,6 +3029,7 @@ export namespace Prisma {
     phone?: StringNullableFilter | string | null
     dateJoined?: DateTimeFilter | Date | string
     isPremium?: BoolFilter | boolean
+    isVerified?: BoolFilter | boolean
     watchlist?: StockWatchlistListRelationFilter
   }
 
@@ -3031,6 +3043,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     dateJoined?: SortOrder
     isPremium?: SortOrder
+    isVerified?: SortOrder
     watchlist?: StockWatchlistOrderByRelationAggregateInput
   }
 
@@ -3050,6 +3063,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     dateJoined?: SortOrder
     isPremium?: SortOrder
+    isVerified?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -3068,6 +3082,7 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter | string | null
     dateJoined?: DateTimeWithAggregatesFilter | Date | string
     isPremium?: BoolWithAggregatesFilter | boolean
+    isVerified?: BoolWithAggregatesFilter | boolean
   }
 
   export type StockWatchlistWhereInput = {
@@ -3119,6 +3134,7 @@ export namespace Prisma {
     phone?: string | null
     dateJoined?: Date | string
     isPremium?: boolean
+    isVerified?: boolean
     watchlist?: StockWatchlistCreateNestedManyWithoutUserInput
   }
 
@@ -3132,6 +3148,7 @@ export namespace Prisma {
     phone?: string | null
     dateJoined?: Date | string
     isPremium?: boolean
+    isVerified?: boolean
     watchlist?: StockWatchlistUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -3145,6 +3162,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     watchlist?: StockWatchlistUpdateManyWithoutUserNestedInput
   }
 
@@ -3158,6 +3176,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     watchlist?: StockWatchlistUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -3171,6 +3190,7 @@ export namespace Prisma {
     phone?: string | null
     dateJoined?: Date | string
     isPremium?: boolean
+    isVerified?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
@@ -3183,6 +3203,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -3195,6 +3216,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockWatchlistCreateInput = {
@@ -3309,6 +3331,7 @@ export namespace Prisma {
     phone?: SortOrder
     dateJoined?: SortOrder
     isPremium?: SortOrder
+    isVerified?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -3321,6 +3344,7 @@ export namespace Prisma {
     phone?: SortOrder
     dateJoined?: SortOrder
     isPremium?: SortOrder
+    isVerified?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -3333,6 +3357,7 @@ export namespace Prisma {
     phone?: SortOrder
     dateJoined?: SortOrder
     isPremium?: SortOrder
+    isVerified?: SortOrder
   }
 
   export type StringWithAggregatesFilter = {
@@ -3665,6 +3690,7 @@ export namespace Prisma {
     phone?: string | null
     dateJoined?: Date | string
     isPremium?: boolean
+    isVerified?: boolean
   }
 
   export type UserUncheckedCreateWithoutWatchlistInput = {
@@ -3677,6 +3703,7 @@ export namespace Prisma {
     phone?: string | null
     dateJoined?: Date | string
     isPremium?: boolean
+    isVerified?: boolean
   }
 
   export type UserCreateOrConnectWithoutWatchlistInput = {
@@ -3699,6 +3726,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateWithoutWatchlistInput = {
@@ -3711,6 +3739,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockWatchlistCreateManyUserInput = {

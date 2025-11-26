@@ -21,6 +21,7 @@ model User {
   phone      String?
   dateJoined DateTime @default(now())
   isPremium  Boolean  @default(false)
+  isVerified Boolean  @default(false)
 
   watchlist  StockWatchlist[] // This allows for our joins
 }

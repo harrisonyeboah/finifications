@@ -114,7 +114,8 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   dateJoined: 'dateJoined',
-  isPremium: 'isPremium'
+  isPremium: 'isPremium',
+  isVerified: 'isVerified'
 };
 
 exports.Prisma.StockWatchlistScalarFieldEnum = {
