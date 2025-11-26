@@ -32,16 +32,23 @@ class LoginController {
             if (!isPasswordValid) {
                 return res.status(401).json({ message: 'Invalid username or password' });
             }
+            // Created my jwt token then I storied in http cookies to prevent xss attacks.
+            const token = jsonwebtoken.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+            );
 
-            jsonwebtoken.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-                if (err) {
-                    console.error('Error generating token:', err);
-                    return res.status(500).json({ message: 'Internal server error' });
-                }
-                // Successful login with token
-                console.log("Generated token:", token);
-                res.status(200).json({ message: 'Login successful', token });
+            res.cookie("authToken", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: 60 * 60 * 1000
             });
+
+            res.status(200).json({ message: 'Login successful' });
+
+
 
             // Successful login
             res.status(200).json({ message: 'Login successful', userId: user.id });
