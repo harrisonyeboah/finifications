@@ -25,6 +25,7 @@
         "nodemailer": "^7.0.10",
         "pg": "^8.16.3",
         "prisma": "^4.16.2",
+        "twilio": "^5.10.6",
         "typescript": "^5.9.3"
     },
     "devDependencies": {

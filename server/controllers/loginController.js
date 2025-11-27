@@ -1,6 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
+const sendSMS = require('../utils/twilio');  
+
+
+
+
 
 
 class LoginController {
@@ -34,7 +39,9 @@ class LoginController {
             }
             // Created my jwt token then I storied in http cookies to prevent xss attacks.
             const token = jsonwebtoken.sign(
-            { userId: user.id },
+            { userId: user.id, 
+                phone: user.phone
+             },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
             );

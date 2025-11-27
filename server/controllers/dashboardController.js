@@ -1,6 +1,7 @@
 const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { sendSMS } = require('../utils/twilio');
 
 
 class DashboardController {
@@ -40,6 +41,13 @@ class DashboardController {
         try {
             const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
             console.log("Decoded JWT:", decoded); // 👈 SEE USERID inside token
+
+            let phone = decoded.phone;
+            let cleaned = phone.replace(/\D/g, ""); // remove non-digits
+            let formatted = `+1${cleaned}`;         
+            console.log(formatted); // +17738176657
+
+            sendSMS(formatted, "This is a test to see if utils works. ");
             return res.status(200).json({ message: "Authenticated", user: decoded })    
         } catch(err) {
             console.error("JWT Error:", err);
