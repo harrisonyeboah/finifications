@@ -16,9 +16,9 @@ function StockWatchlist({listOfItems = []}) {
             <div className="stockWatchlistItems">
                     {listOfItems.map((item, index) => (
                             <StockWatchlistItem 
-                                ticker={item.ticker} 
+                                ticker={item.stockTicker} 
                                 price={item.price}
-                                id = {index}
+                                id = {item.id}
                             ></StockWatchlistItem>
             
                     ))}

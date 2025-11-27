@@ -14,7 +14,11 @@ import AddStock from '../components/addStockComponent.jsx';
 export default function Dashboard() {
     const navigate = useNavigate();
     // I will check to see if the user is authenticated here using useEffect
-    
+    // My state is empty.
+    const [myUser, setMyUser] = useState({
+        userName:"", 
+        myWatchlist:""
+    })
     useEffect(() => {
         // Authentication check logic can be added here
         const checkAuth = async () => {
@@ -43,14 +47,22 @@ export default function Dashboard() {
                     credentials: "include"
                 });
                 if (response.status === 200) {
-                    console.log("We hit the backend and sent back successfully");
+                    const data = await response.json();
+                    setMyUser(prev => ({
+                    ...prev,
+                    userName: data.userName.userName,
+                    myWatchlist: data.stockWatchlist
+                    }));
+                    console.log("My username is  ", data.userName.userName);
+                    console.log("My stock watchlist is  ", data.stockWatchlist);
+                    console.log("My react state current is ", myUser);
                 }
             } catch {
                 console.log("Error");
             }
         }
         getData();
-    }, [])
+    },[])
     
     useEffect(() => {
         document.title = "Dashboard - Finifications";
@@ -140,14 +152,14 @@ export default function Dashboard() {
         <div>
             <div className='dashboardMainContainer'>
                 <Navbar></Navbar>
-                <h2 className='welcomeUser'> Welcome noto.harry </h2>
+                <h2 className='welcomeUser'> Welcome {myUser.userName} </h2>
                 <div className='textBoxHolder'>
                     <input type="text" placeholder="Search Ticker" className='stockTickerSearchInput'/>
                 </div>
                 <div className='allHalvesDiv'>
                     <div className='firstHalfDiv'>
                         <div className="stockHeaderContainer">
-                            <StockHeader ticker="MSFT" price="12.99"></StockHeader>
+                            <StockHeader ticker={myUser.myWatchlist?.[0]?.stockTicker || "No stocks yet"} price="12.99"></StockHeader>
                         </div>
                         <div className='stockVisualizationContainer'>
                             <StockVisualization ticker="MSFT" last="2h ago"></StockVisualization>
@@ -158,7 +170,7 @@ export default function Dashboard() {
                    </div>
                 <div className='secondHalfDiv'>
                     <div className='stockWatchlistContainer'>
-                        <StockWatchlist listOfItems={dummyStockList} />
+                        <StockWatchlist listOfItems={myUser.myWatchlist} />
                     </div>
                 </div>
 
