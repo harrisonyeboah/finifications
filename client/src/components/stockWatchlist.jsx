@@ -1,14 +1,14 @@
 import "../Styles/Dashboard.css";
 function StockWatchlistItem(props) {
-    const {ticker, price, id} = props; // This will based on the api data etc. 
+    const {ticker, price,id, onDelete} = props; // This will based on the api data etc. 
     return (
         <div className="stockWatchlistItem">
             <h3 className="itemHeader"> {ticker} @ ${price} </h3>
-            <button className="stockItemDeleteButton"> Delete</button>
+            <button key={id} onClick={() => onDelete(id)} className="stockItemDeleteButton"> Delete</button>
         </div>
     );  
 }
-function StockWatchlist({listOfItems = []}) {
+function StockWatchlist({listOfItems = [], onDelete}) {
     /* This is dummy static data for now */
     return (
         <div className="stockWatchlistBox">
@@ -17,8 +17,8 @@ function StockWatchlist({listOfItems = []}) {
                     {listOfItems.map((item, index) => (
                             <StockWatchlistItem 
                                 ticker={item.stockTicker} 
-                                price={item.price}
                                 id = {item.id}
+                                onDelete = {onDelete}
                             ></StockWatchlistItem>
             
                     ))}

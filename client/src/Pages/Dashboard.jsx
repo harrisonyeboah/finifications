@@ -17,8 +17,10 @@ export default function Dashboard() {
     // My state is empty.
     const [myUser, setMyUser] = useState({
         userName:"", 
-        myWatchlist:""
+        myWatchlist: []
     })
+    const [isConnected, setIsConnected] = useState(false);
+    const [message, setMessage] = useState("");
     useEffect(() => {
         // Authentication check logic can be added here
         const checkAuth = async () => {
@@ -38,7 +40,36 @@ export default function Dashboard() {
         };
         checkAuth();
     }, []);
+    // I will connect to my web socket on local host 8080.    
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:8080'); 
+
+        ws.onopen = () => {
+            console.log('WebSocket connection established');
+            setIsConnected(true);
+        };
+
+        ws.onmessage = (event) => {
+            console.log('Message from server:', event.data);
+            setMessage(event.data); // Update state with received message
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+            setIsConnected(false);
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        // Clean up the WebSocket connection when the component unmounts
+        return () => {
+            ws.close();
+        };
+      }, []); // Empty dependency array ensures this runs once on mount
     
+    // I will fetch my user info 
     useEffect(() => {
         const getData = async ()=> {
             try {
@@ -63,10 +94,31 @@ export default function Dashboard() {
         }
         getData();
     },[])
-    
+
     useEffect(() => {
         document.title = "Dashboard - Finifications";
     }, []);
+
+
+    const deleteButton = async (stockId) => {
+        const response = await fetch("http://localhost:8080/api/deleteButton", {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({stockId})
+        }); 
+        if (response.status === 200) {
+            const data = await response.json();
+            // This is my new watchlist.
+            console.log(data.watchlist);
+            setMyUser(prev => ({
+                ...prev,
+                myWatchlist: data.watchlist
+            }));
+        }
+    }
 
     const dummyStockList = [
         {
@@ -145,6 +197,10 @@ export default function Dashboard() {
             price: 171.05
         }
     ];
+    console.log("My dummy list");
+    console.log(dummyStockList);
+    console.log("My Dyanamic list.")
+    console.log(myUser.myWatchlist);
 
 
 
@@ -170,7 +226,7 @@ export default function Dashboard() {
                    </div>
                 <div className='secondHalfDiv'>
                     <div className='stockWatchlistContainer'>
-                        <StockWatchlist listOfItems={myUser.myWatchlist} />
+                        <StockWatchlist listOfItems={myUser?.myWatchlist || []} onDelete={deleteButton} />
                     </div>
                 </div>
 

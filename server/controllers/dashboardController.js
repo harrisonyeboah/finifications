@@ -15,6 +15,7 @@ class DashboardController {
         this.router = express.Router();
         this.router.get('/api/authenticate', this.authenticate.bind(this));
         this.router.get('/api/getUserInfo', this.getUserInfo.bind(this));
+        this.router.post('/api/deleteButton', this.deleteButton.bind(this));
     }
 
 
@@ -37,13 +38,11 @@ class DashboardController {
     async getUserInfo(req, res) {
         const token = req.cookies.authToken;
         if (!token) {
-            console.log("No token");
             return res.status(401).json({ message: "No token found" });
         }
 
         try {
             const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-            console.log("Decoded JWT:", decoded); // 👈 SEE USERID inside token
 
             // I am going to send my text message to my user that he/she is logged in 
             let phone = decoded.phone;
@@ -65,11 +64,6 @@ class DashboardController {
             },
             });
 
-        
-
-
-            console.log("My username is", user, "And my watchlist contains", watchlist);
-
 
 
             //sendSMS(formatted, "This is a test to see if utils works. ");
@@ -79,6 +73,43 @@ class DashboardController {
             return res.status(401).json({ message: "Invalid token" });
         }
     }
+    async deleteButton(req, res) {
+        const token = req.cookies.authToken;
+        if (!token) {
+            console.log("No token");
+            return res.status(401).json({ message: "No token found" });
+        }
+        const stockIdDict = req.body;
+        const stockId = stockIdDict.stockId;
+        console.log(stockId);
+        
+        try {
+        // We will try deleting the stock then 
+        const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+        console.log(decoded);
+        const deleted = await prisma.stockWatchlist.delete({
+            where: { id: stockId }
+        });
+
+        // We will get a new watch list
+
+
+        const watchlist = await prisma.stockWatchlist.findMany({
+            where: {
+                userId: decoded.userId,  
+            },
+        });
+        console.log("My new watch list is ", watchlist);
+
+        return res.status(200).json({ watchlist });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Could not delete" });
+        }
+    };
+
 
 }
+
+
 module.exports = DashboardController;
