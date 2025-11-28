@@ -1,6 +1,7 @@
 // These are my imports
 require('dotenv').config();  
 const express = require('express');
+const WebSocket = require("ws"); // My websocket server will also be in here. 
 const cors = require('cors');
 const { PrismaClient } = require('./src/generated/client');                // CommonJS style
 const RegistrationController = require('./controllers/registrationController.js');
@@ -12,11 +13,55 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 
+// This is my API key for my web socket server 
+const API_KEY = process.env.MASSIVE_API_KEY;
+
 // This is the objects to my login controllers and prisma client
 const prisma = new PrismaClient();
 const registrationController = new RegistrationController(prisma);
 const loginController = new LoginController(prisma);
 const dashboardController = new DashboardController(prisma);
+const socket = new WebSocket("wss://socket.massive.com/stocks");
+
+
+socket.on("open", () => {
+  console.log("Connected to Massive WebSocket");
+
+  // Step 1: authenticate
+  socket.send(JSON.stringify({
+    action: "auth",
+    params: API_KEY
+  }));
+});
+
+socket.on("message", (raw) => {
+  const msg = JSON.parse(raw);
+
+  msg.forEach(event => {
+    if (event.ev === "status" && event.status === "auth_success") {
+      console.log("Authenticated!");
+
+      // Step 2: subscribe once authenticated
+      socket.send(JSON.stringify({
+        action: "subscribe",
+        params: "AM.AAPL,AM.MSFT" // aggregate per minute
+      }));
+    } 
+
+    if (event.ev === "AM") {
+      console.log("Aggregate:", event.sym, event);
+    }
+
+    if (event.ev === "T") {
+      console.log("Trade:", event.sym, event);
+    }
+  });
+});
+
+socket.on("close", () => console.log("Socket closed"));
+socket.on("error", (err) => console.error("WebSocket error:", err));
+
+
 
 
 
