@@ -1,4 +1,5 @@
 // smsTest.js
+/*
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); // adjust path if needed
 const twilio = require('twilio');
@@ -55,3 +56,4 @@ async function listVerifiedNumbers() {
   // Replace with a verified number if on a trial account
   await sendSMS("+17738176657", "Hello from Twilio test!");
 })();
+*/

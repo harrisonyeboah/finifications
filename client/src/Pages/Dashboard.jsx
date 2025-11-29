@@ -12,6 +12,7 @@ import StockVisualization from '../components/stockVisualization.jsx';
 import StockWatchlist from '../components/stockWatchlist.jsx';
 import AddStock from '../components/addStockComponent.jsx';
 export default function Dashboard() {
+    
     const navigate = useNavigate();
     // I will check to see if the user is authenticated here using useEffect
     // My state is empty.
@@ -21,6 +22,10 @@ export default function Dashboard() {
     })
     const [isConnected, setIsConnected] = useState(false);
     const [message, setMessage] = useState("");
+    const [inputValue, setInputValue] = useState("");
+    const [currentTicker, setCurrentTicker] = useState(myUser.myWatchlist?.[0]?.stockTicker || "msft");
+    const [currentTickerPrice, setCurrentTickerPrice] = useState();
+
     useEffect(() => {
         // Authentication check logic can be added here
         const checkAuth = async () => {
@@ -45,17 +50,14 @@ export default function Dashboard() {
         const ws = new WebSocket('ws://localhost:8080'); 
 
         ws.onopen = () => {
-            console.log('WebSocket connection established');
             setIsConnected(true);
         };
 
         ws.onmessage = (event) => {
-            console.log('Message from server:', event.data);
             setMessage(event.data); // Update state with received message
         };
 
         ws.onclose = () => {
-            console.log('WebSocket connection closed');
             setIsConnected(false);
         };
 
@@ -63,11 +65,10 @@ export default function Dashboard() {
             console.error('WebSocket error:', error);
         };
 
-        // Clean up the WebSocket connection when the component unmounts
         return () => {
             ws.close();
         };
-      }, []); // Empty dependency array ensures this runs once on mount
+      }, []); 
     
     // I will fetch my user info 
     useEffect(() => {
@@ -94,6 +95,15 @@ export default function Dashboard() {
         }
         getData();
     },[])
+    
+    useEffect(() => {
+        async function fetchPrice() {
+            const price = await priceState();
+            setCurrentTickerPrice(price);
+        }
+    fetchPrice();
+  }, []);
+    
 
     useEffect(() => {
         document.title = "Dashboard - Finifications";
@@ -119,7 +129,7 @@ export default function Dashboard() {
             }));
         }
     }
-
+    /*
     const dummyStockList = [
         {
             ticker: "AAPL",
@@ -197,10 +207,49 @@ export default function Dashboard() {
             price: 171.05
         }
     ];
-    console.log("My dummy list");
-    console.log(dummyStockList);
-    console.log("My Dyanamic list.")
-    console.log(myUser.myWatchlist);
+    For debugging purposes.
+    */
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+        // When I press enter on the key I will reset my state 
+        // THen I will call search ticker to call to my backend. 
+        getTicker(inputValue);
+        // This will then be reseted. 
+        setInputValue('');
+    }
+    };
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+        console.log(inputValue);
+    };
+    const getTicker = async (tickerName) => {
+        const response = await fetch(
+            `http://localhost:8080/api/getTicker/${tickerName}`,
+            {
+                method: "GET",
+                credentials: "include"
+            }
+        );
+
+        const data = await response.json();
+        if (response.status === 200) {
+            setCurrentTicker(tickerName);
+            setCurrentTickerPrice(data.c);
+            return data.c;
+        }
+        return 0;
+    };
+
+    const priceState = () => {
+        const price = getTicker(currentTicker);
+        setCurrentTickerPrice(price); // This will make a backend call to the first item. 
+    }
+
+
+
+
+    
+
 
 
 
@@ -210,12 +259,12 @@ export default function Dashboard() {
                 <Navbar></Navbar>
                 <h2 className='welcomeUser'> Welcome {myUser.userName} </h2>
                 <div className='textBoxHolder'>
-                    <input type="text" placeholder="Search Ticker" className='stockTickerSearchInput'/>
+                    <input onKeyDown={handleKeyDown} onChange={handleInputChange} type="text" placeholder="Search Ticker" className='stockTickerSearchInput'/>
                 </div>
                 <div className='allHalvesDiv'>
                     <div className='firstHalfDiv'>
                         <div className="stockHeaderContainer">
-                            <StockHeader ticker={myUser.myWatchlist?.[0]?.stockTicker || "No stocks yet"} price="12.99"></StockHeader>
+                            <StockHeader ticker={currentTicker} price={currentTickerPrice}></StockHeader>
                         </div>
                         <div className='stockVisualizationContainer'>
                             <StockVisualization ticker="MSFT" last="2h ago"></StockVisualization>

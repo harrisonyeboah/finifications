@@ -1,11 +1,13 @@
+// We will need our .env for api key.
+require('dotenv').config();  
+
 const { PrismaClient } = require('../src/generated');
 const prisma = new PrismaClient();
 
 const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { sendSMS } = require('../utils/twilio');
-
+const axios = require("axios"); 
 
 
 
@@ -16,6 +18,7 @@ class DashboardController {
         this.router.get('/api/authenticate', this.authenticate.bind(this));
         this.router.get('/api/getUserInfo', this.getUserInfo.bind(this));
         this.router.post('/api/deleteButton', this.deleteButton.bind(this));
+        this.router.get('/api/getTicker/:tickerName', this.getTicker.bind(this));
     }
 
 
@@ -75,6 +78,7 @@ class DashboardController {
     }
     async deleteButton(req, res) {
         const token = req.cookies.authToken;
+
         if (!token) {
             console.log("No token");
             return res.status(401).json({ message: "No token found" });
@@ -106,7 +110,21 @@ class DashboardController {
             console.error(err);
             return res.status(500).json({ error: "Could not delete" });
         }
-    };
+    }
+
+    async getTicker(req, res) {
+        const tickerName = req.params.tickerName; // <-- get tickerName from params
+        console.log("Ticker:", tickerName.toUpperCase());
+
+        // Call Finnhub API here, for example
+        const response = await fetch(
+            `https://finnhub.io/api/v1/quote?symbol=${tickerName.toUpperCase()}&token=${process.env.FINNHUB_API_KEY}`
+        );
+        const data = await response.json();
+        res.json(data); // send data back to frontend
+    }
+
+
 
 
 }
