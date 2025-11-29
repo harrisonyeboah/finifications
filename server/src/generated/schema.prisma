@@ -31,9 +31,11 @@ model StockWatchlist {
   id          String   @id @default(uuid())
   userId      String
   stockTicker String
+  notifyPrice Float?   // Optional notify price
 
   // Relation to User
   user User @relation(fields: [userId], references: [id])
 
-  @@index([userId]) // This is the stock watchlist
+  @@index([userId])
 }
+

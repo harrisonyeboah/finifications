@@ -121,7 +121,8 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.StockWatchlistScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  stockTicker: 'stockTicker'
+  stockTicker: 'stockTicker',
+  notifyPrice: 'notifyPrice'
 };
 
 exports.Prisma.SortOrder = {

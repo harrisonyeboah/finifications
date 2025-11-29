@@ -1,6 +1,6 @@
 import "../Styles/Dashboard.css";
 function StockWatchlistItem(props) {
-    const {ticker, price,id, onDelete} = props; // This will based on the api data etc. 
+    const {ticker, price, id, onDelete} = props; // This will based on the api data etc. 
     return (
         <div className="stockWatchlistItem">
             <h3 className="itemHeader"> {ticker} @ ${price} </h3>
@@ -18,6 +18,7 @@ function StockWatchlist({listOfItems = [], onDelete}) {
                             <StockWatchlistItem 
                                 ticker={item.stockTicker} 
                                 id = {item.id}
+                                price = {item.notifyPrice}
                                 onDelete = {onDelete}
                             ></StockWatchlistItem>
             

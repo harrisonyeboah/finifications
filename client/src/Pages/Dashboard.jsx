@@ -24,7 +24,7 @@ export default function Dashboard() {
     const [message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
     const [currentTicker, setCurrentTicker] = useState(myUser.myWatchlist?.[0]?.stockTicker || "msft");
-    const [currentTickerPrice, setCurrentTickerPrice] = useState();
+    const [currentTickerPrice, setCurrentTickerPrice] = useState(0);
 
     useEffect(() => {
         // Authentication check logic can be added here
@@ -45,7 +45,8 @@ export default function Dashboard() {
         };
         checkAuth();
     }, []);
-    // I will connect to my web socket on local host 8080.    
+    // I will connect to my web socket on local host 8080.   
+    /* 
     useEffect(() => {
         const ws = new WebSocket('ws://localhost:8080'); 
 
@@ -69,6 +70,7 @@ export default function Dashboard() {
             ws.close();
         };
       }, []); 
+    */
     
     // I will fetch my user info 
     useEffect(() => {
@@ -129,86 +131,6 @@ export default function Dashboard() {
             }));
         }
     }
-    /*
-    const dummyStockList = [
-        {
-            ticker: "AAPL",
-            condition: "Above",
-            price: 185.32
-        },
-        {
-            ticker: "TSLA",
-            condition: "Below",
-            price: 210.45
-        },
-        {
-            ticker: "AMZN",
-            condition: "Above",
-            price: 142.88
-        },
-        {
-            ticker: "NVDA",
-            condition: "Below",
-            price: 118.23
-        },
-        {
-            ticker: "META",
-            condition: "Above",
-            price: 325.10
-        },
-        {
-            ticker: "GOOGL",
-            condition: "Below",
-            price: 132.55
-        },
-        {
-            ticker: "MSFT",
-            condition: "Above",
-            price: 415.22
-        },
-        {
-            ticker: "NFLX",
-            condition: "Below",
-            price: 580.14
-        },
-        {
-            ticker: "AMD",
-            condition: "Above",
-            price: 165.92
-        },
-        {
-            ticker: "INTC",
-            condition: "Below",
-            price: 34.78
-        },
-        {
-            ticker: "DIS",
-            condition: "Above",
-            price: 95.20
-        },
-        {
-            ticker: "UBER",
-            condition: "Below",
-            price: 68.13
-        },
-        {
-            ticker: "SHOP",
-            condition: "Above",
-            price: 77.44
-        },
-        {
-            ticker: "COIN",
-            condition: "Below",
-            price: 123.66
-        },
-        {
-            ticker: "IBM",
-            condition: "Above",
-            price: 171.05
-        }
-    ];
-    For debugging purposes.
-    */
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
         // When I press enter on the key I will reset my state 
@@ -242,8 +164,34 @@ export default function Dashboard() {
 
     const priceState = () => {
         const price = getTicker(currentTicker);
-        setCurrentTickerPrice(price); // This will make a backend call to the first item. 
+        return price;
     }
+
+    const addStockToWishlist = async (stockToAdd, notifyPrice) => {
+        const response = await fetch(`http://localhost:8080/api/addStockToWishlist`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                stockToAdd,
+                notifyPrice
+            })
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            // This is my new watchlist.
+            console.log("ZE DATA IS", data);
+            setMyUser(prev => ({
+                ...prev,
+                myWatchlist: data.watchlist
+            }));
+            console.log(myUser);
+        }
+    };
+
 
 
 
@@ -270,7 +218,7 @@ export default function Dashboard() {
                             <StockVisualization ticker="MSFT" last="2h ago"></StockVisualization>
                         </div>
                         <div className='addStockContainer'>
-                            <AddStock></AddStock>
+                            <AddStock addStockFunc={addStockToWishlist} tickerName={currentTicker} ></AddStock>
                         </div>
                    </div>
                 <div className='secondHalfDiv'>

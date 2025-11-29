@@ -19,6 +19,7 @@ class DashboardController {
         this.router.get('/api/getUserInfo', this.getUserInfo.bind(this));
         this.router.post('/api/deleteButton', this.deleteButton.bind(this));
         this.router.get('/api/getTicker/:tickerName', this.getTicker.bind(this));
+        this.router.post('/api/addStockToWishlist', this.addStockToWatchlist.bind(this));
     }
 
 
@@ -113,6 +114,12 @@ class DashboardController {
     }
 
     async getTicker(req, res) {
+        const token = req.cookies.authToken;
+
+        if (!token) {
+            console.log("No token");
+            return res.status(401).json({ message: "No token found" });
+        }
         const tickerName = req.params.tickerName; // <-- get tickerName from params
         console.log("Ticker:", tickerName.toUpperCase());
 
@@ -124,6 +131,52 @@ class DashboardController {
         res.json(data); // send data back to frontend
     }
 
+    async addStockToWatchlist(req, res) {
+        const token = req.cookies.authToken; // Always make sure that the user has a token when they enter. 
+
+        if (!token) {
+            console.log("No token");
+            return res.status(401).json({ message: "No token found" });
+        }
+        const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET); 
+        const userId = decoded.userId; // Make sure your token has userId
+
+        const stockToAdd = req.body.stockToAdd.toUpperCase();
+        const notifyPrice = parseFloat(req.body.notifyPrice);
+        
+        const existing = await prisma.stockWatchlist.findFirst({
+            where: {
+                userId,
+                stockTicker: stockToAdd,
+                notifyPrice: notifyPrice
+            }
+        });
+
+        if (existing) {
+            return res.status(400).json({
+                success: false,
+                message: "Stock with this notify price already exists in your watchlist."
+            });
+        }
+        
+        const newEntry = await prisma.stockWatchlist.create({
+            data: {
+                userId,
+                stockTicker: stockToAdd,
+                notifyPrice: notifyPrice || null
+            }
+        });
+
+        const watchlist = await prisma.stockWatchlist.findMany({
+            where: {
+                userId: decoded.userId,  
+            },
+        });
+
+        return res.status(200).json({ message: "Succesfully added", watchlist});
+
+        
+    }
 
 
 
