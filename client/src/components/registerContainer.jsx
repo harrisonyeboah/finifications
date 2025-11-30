@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 function RegisterContainer() {
     const navigate = useNavigate();
     const [message, setMessage] = useState(" This username is already taken");
@@ -77,7 +79,7 @@ function RegisterContainer() {
                     <input name="email" className='registerInput' onChange={handleChange} value={userInfo.email} type="email" placeholder="Email Address" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Enter a valid email address" required/><br />
                     <input name="phone" className='registerInput' onChange={handleChange} value={userInfo.phone} type="tel" placeholder="676-767-6767" pattern="^\d{3}-\d{3}-\d{4}$" title="Format: 123-456-7890" required/><br />
                     {message && <p className="registerMessage">{message}</p>}
-                <a className='registerAchor' href="https://www.youtube.com/"> Have an account? Login. </a>
+                <Link className="loginAchor" to="/login"> I already have an account login </Link>
                 <br />
                 <button className="registerButton" type="submit">Register</button>
             </form>

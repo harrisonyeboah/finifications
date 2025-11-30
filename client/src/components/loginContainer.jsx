@@ -1,6 +1,7 @@
 // Installing my dependencies
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 function LoginContainer() {
@@ -61,9 +62,8 @@ function LoginContainer() {
                 <input className='loginInput' name="username" onChange={handleChange} type="text" placeholder="username" /><br />
                 <input className='loginInput' name="password" onChange={handleChange} type="password" placeholder="password" /><br />
                 {message && <p className="loginMessage">{message}</p>}
-                <a className='loginAchor' href="https://www.youtube.com/"> forgot password? </a>
-                <br />
-                <a className='loginAchor' href="https://www.youtube.com/"> don't have an account register </a>
+                <Link className="loginAchor" to="/forgot-password/code"> forgot password (feature currently being developed) </Link>                <br />
+                <Link className="loginAchor" to="/register"> don't have an account? Register </Link>
                 <br />
                 <button className="loginButton" type="submit">Login</button>
             </form>
