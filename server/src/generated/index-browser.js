@@ -122,7 +122,9 @@ exports.Prisma.StockWatchlistScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   stockTicker: 'stockTicker',
-  notifyPrice: 'notifyPrice'
+  notifyPrice: 'notifyPrice',
+  condition: 'condition',
+  fulfilled: 'fulfilled'
 };
 
 exports.Prisma.SortOrder = {
@@ -139,7 +141,10 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Condition = {
+  ABOVE: 'ABOVE',
+  BELOW: 'BELOW'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',

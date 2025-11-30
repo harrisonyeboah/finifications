@@ -27,13 +27,19 @@ model User {
 }
 
 
+enum Condition {
+  ABOVE
+  BELOW
+}
+
 model StockWatchlist {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   userId      String
   stockTicker String
-  notifyPrice Float?   // Optional notify price
+  notifyPrice Float?
+  condition   Condition
+  fulfilled   Boolean   @default(false)
 
-  // Relation to User
   user User @relation(fields: [userId], references: [id])
 
   @@index([userId])

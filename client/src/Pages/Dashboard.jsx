@@ -1,6 +1,6 @@
 // Importing my dependencies
 import {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 // Importing my styles
 import "../Styles/Dashboard.css";
@@ -23,8 +23,9 @@ export default function Dashboard() {
     const [isConnected, setIsConnected] = useState(false);
     const [message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
-    const [currentTicker, setCurrentTicker] = useState(myUser.myWatchlist?.[0]?.stockTicker || "msft");
+    const [currentTicker, setCurrentTicker] = useState(myUser.myWatchlist?.[0]?.stockTicker || "aapl");
     const [currentTickerPrice, setCurrentTickerPrice] = useState(0);
+    const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
         // Authentication check logic can be added here
@@ -45,33 +46,7 @@ export default function Dashboard() {
         };
         checkAuth();
     }, []);
-    // I will connect to my web socket on local host 8080.   
-    /* 
-    useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8080'); 
 
-        ws.onopen = () => {
-            setIsConnected(true);
-        };
-
-        ws.onmessage = (event) => {
-            setMessage(event.data); // Update state with received message
-        };
-
-        ws.onclose = () => {
-            setIsConnected(false);
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-
-        return () => {
-            ws.close();
-        };
-      }, []); 
-    */
-    
     // I will fetch my user info 
     useEffect(() => {
         const getData = async ()=> {
@@ -87,9 +62,6 @@ export default function Dashboard() {
                     userName: data.userName.userName,
                     myWatchlist: data.stockWatchlist
                     }));
-                    console.log("My username is  ", data.userName.userName);
-                    console.log("My stock watchlist is  ", data.stockWatchlist);
-                    console.log("My react state current is ", myUser);
                 }
             } catch {
                 console.log("Error");
@@ -109,7 +81,12 @@ export default function Dashboard() {
 
     useEffect(() => {
         document.title = "Dashboard - Finifications";
+        setMessage("Welcome to Finifications Developed by Harrison Yeboah Student at Denison University. ")
     }, []);
+
+
+
+
 
 
     const deleteButton = async (stockId) => {
@@ -124,7 +101,6 @@ export default function Dashboard() {
         if (response.status === 200) {
             const data = await response.json();
             // This is my new watchlist.
-            console.log(data.watchlist);
             setMyUser(prev => ({
                 ...prev,
                 myWatchlist: data.watchlist
@@ -142,7 +118,6 @@ export default function Dashboard() {
     };
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
-        console.log(inputValue);
     };
     const getTicker = async (tickerName) => {
         const response = await fetch(
@@ -155,9 +130,13 @@ export default function Dashboard() {
 
         const data = await response.json();
         if (response.status === 200) {
+            const graphArray = data.myPricesToGraph;
+            const currentPrice = data.data.c
             setCurrentTicker(tickerName);
-            setCurrentTickerPrice(data.c);
-            return data.c;
+            setCurrentTickerPrice(currentPrice);
+            setChartData(graphArray);
+            console.log(currentPrice, graphArray);
+            return data.data.c;
         }
         return 0;
     };
@@ -167,29 +146,32 @@ export default function Dashboard() {
         return price;
     }
 
-    const addStockToWishlist = async (stockToAdd, notifyPrice) => {
-        const response = await fetch(`http://localhost:8080/api/addStockToWishlist`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                stockToAdd,
-                notifyPrice
-            })
-        });
+    const addStockToWishlist = async (stockToAdd, notifyPrice, condition) => {
+        if ((condition === "ABOVE" && notifyPrice > currentTickerPrice) || (condition === "BELOW" && notifyPrice < currentTickerPrice)) {
+            const response = await fetch(`http://localhost:8080/api/addStockToWishlist`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    stockToAdd,
+                    notifyPrice,
+                    condition
+                })
+            });
 
-        if (response.status === 200) {
-            const data = await response.json();
-            // This is my new watchlist.
-            console.log("ZE DATA IS", data);
-            setMyUser(prev => ({
-                ...prev,
-                myWatchlist: data.watchlist
-            }));
-            console.log(myUser);
+            if (response.status === 200) {
+                const data = await response.json();
+                // This is my new watchlist.
+                setMyUser(prev => ({
+                    ...prev,
+                    myWatchlist: data.watchlist
+                }));
+            }
         }
+        setMessage("Can not add to wishlist. ");
+
     };
 
 
@@ -215,7 +197,7 @@ export default function Dashboard() {
                             <StockHeader ticker={currentTicker} price={currentTickerPrice}></StockHeader>
                         </div>
                         <div className='stockVisualizationContainer'>
-                            <StockVisualization ticker="MSFT" last="2h ago"></StockVisualization>
+                            <StockVisualization prices={chartData}></StockVisualization>
                         </div>
                         <div className='addStockContainer'>
                             <AddStock addStockFunc={addStockToWishlist} tickerName={currentTicker} ></AddStock>

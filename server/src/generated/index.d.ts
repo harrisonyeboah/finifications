@@ -47,6 +47,8 @@ export type StockWatchlistPayload<ExtArgs extends $Extensions.Args = $Extensions
     userId: string
     stockTicker: string
     notifyPrice: number | null
+    condition: Condition
+    fulfilled: boolean
   }, ExtArgs["result"]["stockWatchlist"]>
   composites: {}
 }
@@ -56,6 +58,18 @@ export type StockWatchlistPayload<ExtArgs extends $Extensions.Args = $Extensions
  * 
  */
 export type StockWatchlist = runtime.Types.DefaultSelection<StockWatchlistPayload>
+
+/**
+ * Enums
+ */
+
+export const Condition: {
+  ABOVE: 'ABOVE',
+  BELOW: 'BELOW'
+};
+
+export type Condition = (typeof Condition)[keyof typeof Condition]
+
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2069,6 +2083,8 @@ export namespace Prisma {
     userId: string | null
     stockTicker: string | null
     notifyPrice: number | null
+    condition: Condition | null
+    fulfilled: boolean | null
   }
 
   export type StockWatchlistMaxAggregateOutputType = {
@@ -2076,6 +2092,8 @@ export namespace Prisma {
     userId: string | null
     stockTicker: string | null
     notifyPrice: number | null
+    condition: Condition | null
+    fulfilled: boolean | null
   }
 
   export type StockWatchlistCountAggregateOutputType = {
@@ -2083,6 +2101,8 @@ export namespace Prisma {
     userId: number
     stockTicker: number
     notifyPrice: number
+    condition: number
+    fulfilled: number
     _all: number
   }
 
@@ -2100,6 +2120,8 @@ export namespace Prisma {
     userId?: true
     stockTicker?: true
     notifyPrice?: true
+    condition?: true
+    fulfilled?: true
   }
 
   export type StockWatchlistMaxAggregateInputType = {
@@ -2107,6 +2129,8 @@ export namespace Prisma {
     userId?: true
     stockTicker?: true
     notifyPrice?: true
+    condition?: true
+    fulfilled?: true
   }
 
   export type StockWatchlistCountAggregateInputType = {
@@ -2114,6 +2138,8 @@ export namespace Prisma {
     userId?: true
     stockTicker?: true
     notifyPrice?: true
+    condition?: true
+    fulfilled?: true
     _all?: true
   }
 
@@ -2209,6 +2235,8 @@ export namespace Prisma {
     userId: string
     stockTicker: string
     notifyPrice: number | null
+    condition: Condition
+    fulfilled: boolean
     _count: StockWatchlistCountAggregateOutputType | null
     _avg: StockWatchlistAvgAggregateOutputType | null
     _sum: StockWatchlistSumAggregateOutputType | null
@@ -2235,6 +2263,8 @@ export namespace Prisma {
     userId?: boolean
     stockTicker?: boolean
     notifyPrice?: boolean
+    condition?: boolean
+    fulfilled?: boolean
     user?: boolean | UserArgs<ExtArgs>
   }, ExtArgs["result"]["stockWatchlist"]>
 
@@ -2243,6 +2273,8 @@ export namespace Prisma {
     userId?: boolean
     stockTicker?: boolean
     notifyPrice?: boolean
+    condition?: boolean
+    fulfilled?: boolean
   }
 
   export type StockWatchlistInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -3026,7 +3058,9 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     stockTicker: 'stockTicker',
-    notifyPrice: 'notifyPrice'
+    notifyPrice: 'notifyPrice',
+    condition: 'condition',
+    fulfilled: 'fulfilled'
   };
 
   export type StockWatchlistScalarFieldEnum = (typeof StockWatchlistScalarFieldEnum)[keyof typeof StockWatchlistScalarFieldEnum]
@@ -3138,6 +3172,8 @@ export namespace Prisma {
     userId?: StringFilter | string
     stockTicker?: StringFilter | string
     notifyPrice?: FloatNullableFilter | number | null
+    condition?: EnumConditionFilter | Condition
+    fulfilled?: BoolFilter | boolean
     user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
@@ -3146,6 +3182,8 @@ export namespace Prisma {
     userId?: SortOrder
     stockTicker?: SortOrder
     notifyPrice?: SortOrderInput | SortOrder
+    condition?: SortOrder
+    fulfilled?: SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -3158,6 +3196,8 @@ export namespace Prisma {
     userId?: SortOrder
     stockTicker?: SortOrder
     notifyPrice?: SortOrderInput | SortOrder
+    condition?: SortOrder
+    fulfilled?: SortOrder
     _count?: StockWatchlistCountOrderByAggregateInput
     _avg?: StockWatchlistAvgOrderByAggregateInput
     _max?: StockWatchlistMaxOrderByAggregateInput
@@ -3173,6 +3213,8 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter | string
     stockTicker?: StringWithAggregatesFilter | string
     notifyPrice?: FloatNullableWithAggregatesFilter | number | null
+    condition?: EnumConditionWithAggregatesFilter | Condition
+    fulfilled?: BoolWithAggregatesFilter | boolean
   }
 
   export type UserCreateInput = {
@@ -3274,6 +3316,8 @@ export namespace Prisma {
     id?: string
     stockTicker: string
     notifyPrice?: number | null
+    condition: Condition
+    fulfilled?: boolean
     user: UserCreateNestedOneWithoutWatchlistInput
   }
 
@@ -3282,12 +3326,16 @@ export namespace Prisma {
     userId: string
     stockTicker: string
     notifyPrice?: number | null
+    condition: Condition
+    fulfilled?: boolean
   }
 
   export type StockWatchlistUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
     user?: UserUpdateOneRequiredWithoutWatchlistNestedInput
   }
 
@@ -3296,6 +3344,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockWatchlistCreateManyInput = {
@@ -3303,12 +3353,16 @@ export namespace Prisma {
     userId: string
     stockTicker: string
     notifyPrice?: number | null
+    condition: Condition
+    fulfilled?: boolean
   }
 
   export type StockWatchlistUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockWatchlistUncheckedUpdateManyInput = {
@@ -3316,6 +3370,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StringFilter = {
@@ -3487,6 +3543,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter | number | null
   }
 
+  export type EnumConditionFilter = {
+    equals?: Condition
+    in?: Enumerable<Condition>
+    notIn?: Enumerable<Condition>
+    not?: NestedEnumConditionFilter | Condition
+  }
+
   export type UserRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -3497,6 +3560,8 @@ export namespace Prisma {
     userId?: SortOrder
     stockTicker?: SortOrder
     notifyPrice?: SortOrder
+    condition?: SortOrder
+    fulfilled?: SortOrder
   }
 
   export type StockWatchlistAvgOrderByAggregateInput = {
@@ -3508,6 +3573,8 @@ export namespace Prisma {
     userId?: SortOrder
     stockTicker?: SortOrder
     notifyPrice?: SortOrder
+    condition?: SortOrder
+    fulfilled?: SortOrder
   }
 
   export type StockWatchlistMinOrderByAggregateInput = {
@@ -3515,6 +3582,8 @@ export namespace Prisma {
     userId?: SortOrder
     stockTicker?: SortOrder
     notifyPrice?: SortOrder
+    condition?: SortOrder
+    fulfilled?: SortOrder
   }
 
   export type StockWatchlistSumOrderByAggregateInput = {
@@ -3535,6 +3604,16 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter
     _min?: NestedFloatNullableFilter
     _max?: NestedFloatNullableFilter
+  }
+
+  export type EnumConditionWithAggregatesFilter = {
+    equals?: Condition
+    in?: Enumerable<Condition>
+    notIn?: Enumerable<Condition>
+    not?: NestedEnumConditionWithAggregatesFilter | Condition
+    _count?: NestedIntFilter
+    _min?: NestedEnumConditionFilter
+    _max?: NestedEnumConditionFilter
   }
 
   export type StockWatchlistCreateNestedManyWithoutUserInput = {
@@ -3607,6 +3686,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type EnumConditionFieldUpdateOperationsInput = {
+    set?: Condition
   }
 
   export type UserUpdateOneRequiredWithoutWatchlistNestedInput = {
@@ -3750,6 +3833,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter | number | null
   }
 
+  export type NestedEnumConditionFilter = {
+    equals?: Condition
+    in?: Enumerable<Condition>
+    notIn?: Enumerable<Condition>
+    not?: NestedEnumConditionFilter | Condition
+  }
+
   export type NestedFloatNullableWithAggregatesFilter = {
     equals?: number | null
     in?: Enumerable<number> | number | null
@@ -3766,16 +3856,30 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter
   }
 
+  export type NestedEnumConditionWithAggregatesFilter = {
+    equals?: Condition
+    in?: Enumerable<Condition>
+    notIn?: Enumerable<Condition>
+    not?: NestedEnumConditionWithAggregatesFilter | Condition
+    _count?: NestedIntFilter
+    _min?: NestedEnumConditionFilter
+    _max?: NestedEnumConditionFilter
+  }
+
   export type StockWatchlistCreateWithoutUserInput = {
     id?: string
     stockTicker: string
     notifyPrice?: number | null
+    condition: Condition
+    fulfilled?: boolean
   }
 
   export type StockWatchlistUncheckedCreateWithoutUserInput = {
     id?: string
     stockTicker: string
     notifyPrice?: number | null
+    condition: Condition
+    fulfilled?: boolean
   }
 
   export type StockWatchlistCreateOrConnectWithoutUserInput = {
@@ -3812,6 +3916,8 @@ export namespace Prisma {
     userId?: StringFilter | string
     stockTicker?: StringFilter | string
     notifyPrice?: FloatNullableFilter | number | null
+    condition?: EnumConditionFilter | Condition
+    fulfilled?: BoolFilter | boolean
   }
 
   export type UserCreateWithoutWatchlistInput = {
@@ -3880,24 +3986,32 @@ export namespace Prisma {
     id?: string
     stockTicker: string
     notifyPrice?: number | null
+    condition: Condition
+    fulfilled?: boolean
   }
 
   export type StockWatchlistUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockWatchlistUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockWatchlistUncheckedUpdateManyWithoutWatchlistInput = {
     id?: StringFieldUpdateOperationsInput | string
     stockTicker?: StringFieldUpdateOperationsInput | string
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    condition?: EnumConditionFieldUpdateOperationsInput | Condition
+    fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

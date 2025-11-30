@@ -1,5 +1,6 @@
 // These are my imports
 require('dotenv').config();  
+const http = require("http");
 const express = require('express');
 const WebSocket = require("ws"); // My websocket server will also be in here. 
 const cors = require('cors');
@@ -13,8 +14,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 
-// This is my API key for my web socket server 
-const API_KEY = process.env.MASSIVE_API_KEY;
+
 
 // This is the objects to my login controllers and prisma client
 const prisma = new PrismaClient();
@@ -24,38 +24,22 @@ const dashboardController = new DashboardController(prisma);
 const socket = new WebSocket("wss://socket.massive.com/stocks");
 
 
-socket.on("open", () => {
-  console.log("Connected to Massive WebSocket");
+const server = http.createServer(app);
 
-  // Step 1: authenticate
-  socket.send(JSON.stringify({
-    action: "auth",
-    params: API_KEY
-  }));
+
+const wss = new WebSocket.Server({ server });
+
+
+const finnhubWS = new WebSocket(`wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY}`);
+
+finnhubWS.on("open", () => {
+  console.log("It is running")
+  finnhubWS.send(JSON.stringify({ type: "subscribe", symbol: "AAPL" }));
 });
 
-socket.on("message", (raw) => {
-  const msg = JSON.parse(raw);
 
-  msg.forEach(event => {
-    if (event.ev === "status" && event.status === "auth_success") {
-      console.log("Authenticated!");
-
-      // Step 2: subscribe once authenticated
-      socket.send(JSON.stringify({
-        action: "subscribe",
-        params: "AM.AAPL,AM.MSFT" // aggregate per minute
-      }));
-    } 
-
-    if (event.ev === "AM") {
-      console.log("Aggregate:", event.sym, event);
-    }
-
-    if (event.ev === "T") {
-      console.log("Trade:", event.sym, event);
-    }
-  });
+finnhubWS.on("message", (msg) => {
+  wss.clients.forEach((client) => client.send(msg));
 });
 
 socket.on("close", () => console.log("Socket closed"));

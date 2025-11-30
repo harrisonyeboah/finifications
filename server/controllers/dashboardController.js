@@ -114,25 +114,58 @@ class DashboardController {
     }
 
     async getTicker(req, res) {
-        const token = req.cookies.authToken;
+        try {
+            const token = req.cookies.authToken;
 
-        if (!token) {
-            console.log("No token");
-            return res.status(401).json({ message: "No token found" });
+            if (!token) {
+                console.log("No token");
+                return res.status(401).json({ message: "No token found" });
+            }
+
+            const tickerName = req.params.tickerName.toUpperCase();
+
+            // --- FINNHUB PRICE ---
+            const response = await fetch(
+                `https://finnhub.io/api/v1/quote?symbol=${tickerName}&token=${process.env.FINNHUB_API_KEY}`
+            );
+
+            // --- DATE SETUP ---
+            // Get today's date and 7 days ago
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+
+            // Helper to format date as YYYY-MM-DD
+            const formatDate = (d) => d.toISOString().split("T")[0];
+
+            const fromDate = formatDate(sevenDaysAgo);
+            const toDate = formatDate(today);
+
+            // --- POLYGON DAILY TIMESTAMPS (Free Plan Friendly) ---
+            const timestamp = await fetch(
+                `https://api.polygon.io/v2/aggs/ticker/${tickerName}/range/1/day/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${process.env.MASSIVE_API_KEY}`
+            );
+
+            // --- READ JSON ***ONLY ONCE*** ---
+            const data = await response.json();      // 1st body read
+            const stampData = await timestamp.json(); // 2nd body read (DIFFERENT RESPONSE)
+            
+            const myPricesToGraph = stampData.results
+            ? stampData.results.map(item => item.c)
+            : [];
+            console.log(data);
+            console.log(myPricesToGraph);
+            // --- RETURN BOTH ---
+            return res.json({ data, myPricesToGraph });
+
+        } catch (err) {
+            console.error("getTicker error:", err);
+            return res.status(500).json({ error: err.message });
         }
-        const tickerName = req.params.tickerName; // <-- get tickerName from params
-        console.log("Ticker:", tickerName.toUpperCase());
-
-        // Call Finnhub API here, for example
-        const response = await fetch(
-            `https://finnhub.io/api/v1/quote?symbol=${tickerName.toUpperCase()}&token=${process.env.FINNHUB_API_KEY}`
-        );
-        const data = await response.json();
-        res.json(data); // send data back to frontend
     }
-
     async addStockToWatchlist(req, res) {
         const token = req.cookies.authToken; // Always make sure that the user has a token when they enter. 
+        console.log("MY CONTROLLER IS HIT");
 
         if (!token) {
             console.log("No token");
@@ -143,14 +176,20 @@ class DashboardController {
 
         const stockToAdd = req.body.stockToAdd.toUpperCase();
         const notifyPrice = parseFloat(req.body.notifyPrice);
+        const condition = (req.body.condition.toUpperCase());
+
+
         
         const existing = await prisma.stockWatchlist.findFirst({
             where: {
                 userId,
                 stockTicker: stockToAdd,
-                notifyPrice: notifyPrice
+                notifyPrice: notifyPrice,
+                condition: condition
             }
         });
+
+
 
         if (existing) {
             return res.status(400).json({
@@ -163,7 +202,9 @@ class DashboardController {
             data: {
                 userId,
                 stockTicker: stockToAdd,
-                notifyPrice: notifyPrice || null
+                notifyPrice: notifyPrice || null, 
+                condition: condition,
+                fulfilled: false
             }
         });
 

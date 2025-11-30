@@ -177,6 +177,10 @@
     border-bottom: .5px solid #ccc;
     color: #a1887f;
 }
+.aboveOrBelowRadio {
+    color: #a1887f;
+    cursor: pointer;
+}
 
 /* RESPONSIVENESS */
 @media (max-width: 720px) {
