@@ -64,7 +64,11 @@ class RegistrationController {
             console.log("New user created:", newUser);
             return res.status(201).json({ message: 'User registered', userId: newUser.id });
         } catch (error) {
-            console.error('Error registering user:', error);
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                console.log("Prisma error code:", error.code); // <-- local debugging
+            } else {
+                console.error(error);
+            }
             res.status(500).json({ message: 'Internal server error' });
         }
     }
