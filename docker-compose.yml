@@ -4,11 +4,12 @@ services:
     container_name: finifications-db
     restart: always
     env_file:
-      - ./.env           # loads POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
-    ports:
-      - "5433:5432"
+      - ./.env
+    # No need to expose Postgres externally unless necessary
+    # ports:
+    #   - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_finifications:/var/lib/postgresql/data
 
   server:
     build:
@@ -17,13 +18,12 @@ services:
     container_name: finifications-server
     restart: always
     env_file:
-      - ./server/.env    # loads DATABASE_URL, MASSIVE_API_KEY
+      - ./server/.env
     ports:
       - "8080:8080"
     depends_on:
       - postgres
-    # ⬇️ Run prisma migrate AFTER DB is up
-    command: sh -c "npx prisma migrate deploy && npm start"
+    command: sh -c "./wait-for-it.sh postgres:5432 -- npx prisma migrate deploy && npm start"
 
   client:
     build:
@@ -37,4 +37,4 @@ services:
       - server
 
 volumes:
-  pgdata:
+  pgdata_finifications:
