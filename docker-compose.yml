@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -5,9 +7,6 @@ services:
     restart: always
     env_file:
       - ./.env
-    # No need to expose Postgres externally unless necessary
-    # ports:
-    #   - "5433:5432"
     volumes:
       - pgdata_finifications:/var/lib/postgresql/data
 
@@ -23,7 +22,8 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
-    command: sh -c "./wait-for-it.sh postgres:5432 -- npx prisma migrate deploy && npm start"
+    command: sh -c "node prisma-wait.js && npx prisma migrate deploy && npm start"
+
 
   client:
     build:
