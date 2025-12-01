@@ -1,6 +1,9 @@
 # Use official Node.js LTS image
 FROM node:20-alpine
 
+# Install OpenSSL 1.1 and other dependencies
+RUN apk add --no-cache openssl1.1-compat
+
 # Set working directory
 WORKDIR /usr/src/app
 
@@ -21,6 +24,3 @@ EXPOSE 8080
 
 # Start the server
 CMD ["node", "server.js"]
-
-
-
