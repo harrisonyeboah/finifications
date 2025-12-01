@@ -54,7 +54,11 @@ class LoginController {
 
             res.status(200).json({ message: 'Login successful' });
         } catch (error) {
-            console.error('Error during login:', error);
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                console.log("Prisma error code:", error.code); // <-- local debugging
+            } else {
+                console.error(error);
+            }
             res.status(500).json({ message: 'Internal server error' });
         }
     }
