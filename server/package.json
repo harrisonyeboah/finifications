@@ -1,35 +1,39 @@
 {
-    "name": "finance-push-notifications-server",
-    "version": "1.0.0",
-    "description": "Server for Finance Push Notifications",
-    "main": "server.js",
-    "scripts": {
-        "start": "node server.js",
-        "dev": "nodemon server.js"
-    },
-    "keywords": [
-        "express",
-        "node",
-        "server"
-    ],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "@prisma/client": "^4.16.2",
-        "bcrypt": "^6.0.0",
-        "cookie-parser": "^1.4.7",
-        "cors": "^2.8.5",
-        "dotenv": "^17.2.3",
-        "express": "^4.21.2",
-        "jsonwebtoken": "^9.0.2",
-        "nodemailer": "^7.0.10",
-        "pg": "^8.16.3",
-        "prisma": "^4.16.2",
-        "twilio": "^5.10.6",
-        "typescript": "^5.9.3",
-        "ws": "^8.18.3"
-    },
-    "devDependencies": {
-        "nodemon": "^3.0.1"
-    }
+  "name": "finance-push-notifications-server",
+  "version": "1.0.0",
+  "description": "Server for Finance Push Notifications",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "server"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.16.2",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.10",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.16.3",
+    "prisma": "^4.16.2",
+    "twilio": "^5.10.6",
+    "typescript": "^5.9.3",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
