@@ -1,26 +1,25 @@
-# Use official Node.js LTS image
-FROM node:20-alpine
+# Use Debian-based Node (NOT Alpine)
+FROM node:18-slim
 
-# Install OpenSSL 1.1 and other dependencies
-RUN apk add --no-cache openssl1.1-compat
+WORKDIR /app
 
-# Set working directory
-WORKDIR /usr/src/app
+# Install system dependencies Prisma needs
+RUN apt-get update && apt-get install -y openssl && apt-get clean
 
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm install --production
+# Install dependencies
+RUN npm install
 
-# Copy the rest of the source code
+# Copy everything else
 COPY . .
 
 # Generate Prisma client
 RUN npx prisma generate
 
-# Expose server port
+# Expose backend port
 EXPOSE 8080
 
-# Start the server
-CMD ["node", "server.js"]
+# Start server
+CMD ["npm", "start"]
