@@ -15,6 +15,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const { PrismaClient, Prisma } = require('../src/generated');
+const prisma = new PrismaClient();
+
 
 
 class RegistrationController {

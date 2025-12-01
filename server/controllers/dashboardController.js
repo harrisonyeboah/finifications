@@ -1,8 +1,9 @@
 // We will need our .env for api key.
 require('dotenv').config();  
 
-const { PrismaClient } = require('../src/generated');
+const { PrismaClient, Prisma } = require('../src/generated');
 const prisma = new PrismaClient();
+
 
 const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
