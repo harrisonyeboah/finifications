@@ -49,10 +49,11 @@ class LoginController {
 
             res.cookie("authToken", token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "strict",
+            secure: true,        // must stay true in HTTPS
+            sameSite: "none",    // allows cross-origin cookies
             maxAge: 60 * 60 * 1000
             });
+
 
             res.status(200).json({ message: 'Login successful' });
         } catch (error) {
