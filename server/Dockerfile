@@ -3,8 +3,10 @@ FROM node:18-slim
 
 WORKDIR /app
 
-# Install system dependencies Prisma needs
-RUN apt-get update && apt-get install -y openssl && apt-get clean
+# Install dependencies Prisma needs (openssl, libssl, etc.)
+RUN apt-get update && \
+    apt-get install -y openssl && \
+    apt-get clean
 
 # Copy package files
 COPY package*.json ./
@@ -12,11 +14,17 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy everything else
+# Copy the rest of the app
 COPY . .
 
-# Generate Prisma client
+# Ensure Prisma has DATABASE_URL available at build time
+# (Render injects environment variables automatically)
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
+# Generate Prisma client AND apply migrations
 RUN npx prisma generate
+RUN npx prisma migrate deploy
 
 # Expose backend port
 EXPOSE 8080
