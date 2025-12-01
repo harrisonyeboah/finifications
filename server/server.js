@@ -51,12 +51,15 @@ socket.on("error", (err) => console.error("WebSocket error:", err));
 
 const PORT = process.env.PORT || 8080;
 
-  app.use(cors({
-    origin: 'http://localhost:3000', // Replace with your React app's URL
-    credentials: true, // Crucial for allowing cookies to be sent
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-  }));
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://finifications-front-end.onrender.com"
+  ],
+  credentials: true,                      // allow cookies / auth headers
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(cookieParser());
 

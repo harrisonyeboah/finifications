@@ -11,15 +11,16 @@ import StockHeader from '../components/stockHeader.jsx';
 import StockVisualization from '../components/stockVisualization.jsx';
 import StockWatchlist from '../components/stockWatchlist.jsx';
 import AddStock from '../components/addStockComponent.jsx';
+
 export default function Dashboard() {
     
     const navigate = useNavigate();
-    // I will check to see if the user is authenticated here using useEffect
-    // My state is empty.
+
     const [myUser, setMyUser] = useState({
         userName:"", 
         myWatchlist: []
-    })
+    });
+
     const [isConnected, setIsConnected] = useState(false);
     const [message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
@@ -27,16 +28,16 @@ export default function Dashboard() {
     const [currentTickerPrice, setCurrentTickerPrice] = useState(0);
     const [chartData, setChartData] = useState([]);
 
+    const BACKEND = "https://finifications.onrender.com";
+
     useEffect(() => {
-        // Authentication check logic can be added here
         const checkAuth = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/authenticate", {
+                const response = await fetch(`${BACKEND}/api/authenticate`, {
                     method: "GET",
-                    credentials: "include" // Include cookies in the request
+                    credentials: "include"
                 });
                 if (response.status !== 200) {
-                    // If not authenticated, redirect to login
                     navigate('/login');
                 }
             } catch (error) {
@@ -47,36 +48,35 @@ export default function Dashboard() {
         checkAuth();
     }, []);
 
-    // I will fetch my user info 
     useEffect(() => {
         const getData = async ()=> {
             try {
-                const response = await fetch("http://localhost:8080/api/getUserInfo", {
+                const response = await fetch(`${BACKEND}/api/getUserInfo`, {
                     method: "GET",
                     credentials: "include"
                 });
                 if (response.status === 200) {
                     const data = await response.json();
                     setMyUser(prev => ({
-                    ...prev,
-                    userName: data.userName.userName,
-                    myWatchlist: data.stockWatchlist
+                        ...prev,
+                        userName: data.userName.userName,
+                        myWatchlist: data.stockWatchlist
                     }));
                 }
             } catch {
                 console.log("Error");
             }
-        }
+        };
         getData();
-    },[])
+    },[]);
     
     useEffect(() => {
         async function fetchPrice() {
             const price = await priceState();
             setCurrentTickerPrice(price);
         }
-    fetchPrice();
-  }, []);
+        fetchPrice();
+    }, []);
     
 
     useEffect(() => {
@@ -84,13 +84,8 @@ export default function Dashboard() {
         setMessage("Welcome to Finifications Developed by Harrison Yeboah Student at Denison University. ")
     }, []);
 
-
-
-
-
-
     const deleteButton = async (stockId) => {
-        const response = await fetch("http://localhost:8080/api/deleteButton", {
+        const response = await fetch(`${BACKEND}/api/deleteButton`, {
             method: "POST",
             credentials: 'include',
             headers: {
@@ -98,30 +93,30 @@ export default function Dashboard() {
             },
             body: JSON.stringify({stockId})
         }); 
+
         if (response.status === 200) {
             const data = await response.json();
-            // This is my new watchlist.
             setMyUser(prev => ({
                 ...prev,
                 myWatchlist: data.watchlist
             }));
         }
-    }
+    };
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-        // When I press enter on the key I will reset my state 
-        // THen I will call search ticker to call to my backend. 
-        getTicker(inputValue);
-        // This will then be reseted. 
-        setInputValue('');
-    }
+            getTicker(inputValue);
+            setInputValue('');
+        }
     };
+
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
+
     const getTicker = async (tickerName) => {
         const response = await fetch(
-            `http://localhost:8080/api/getTicker/${tickerName}`,
+            `${BACKEND}/api/getTicker/${tickerName}`,
             {
                 method: "GET",
                 credentials: "include"
@@ -131,11 +126,12 @@ export default function Dashboard() {
         const data = await response.json();
         if (response.status === 200) {
             const graphArray = data.myPricesToGraph;
-            const currentPrice = data.data.c
+            const currentPrice = data.data.c;
+
             setCurrentTicker(tickerName);
             setCurrentTickerPrice(currentPrice);
             setChartData(graphArray);
-            console.log(currentPrice, graphArray);
+
             return data.data.c;
         }
         return 0;
@@ -144,11 +140,13 @@ export default function Dashboard() {
     const priceState = () => {
         const price = getTicker(currentTicker);
         return price;
-    }
+    };
 
     const addStockToWishlist = async (stockToAdd, notifyPrice, condition) => {
-        if ((condition === "ABOVE" && notifyPrice > currentTickerPrice) || (condition === "BELOW" && notifyPrice < currentTickerPrice)) {
-            const response = await fetch(`http://localhost:8080/api/addStockToWishlist`, {
+        if ((condition === "ABOVE" && notifyPrice > currentTickerPrice) || 
+            (condition === "BELOW" && notifyPrice < currentTickerPrice)) {
+
+            const response = await fetch(`${BACKEND}/api/addStockToWishlist`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -163,56 +161,57 @@ export default function Dashboard() {
 
             if (response.status === 200) {
                 const data = await response.json();
-                // This is my new watchlist.
                 setMyUser(prev => ({
                     ...prev,
                     myWatchlist: data.watchlist
                 }));
             }
         }
-        setMessage("Can not add to wishlist. ");
 
+        setMessage("Can not add to wishlist.");
     };
-
-
-
-
-
-    
-
-
-
 
     return (
         <div>
             <div className='dashboardMainContainer'>
-                <Navbar></Navbar>
+                <Navbar />
                 <h2 className='welcomeUser'> Welcome {myUser.userName} </h2>
+
                 <div className='textBoxHolder'>
-                    <input onKeyDown={handleKeyDown} onChange={handleInputChange} type="text" placeholder="Search Ticker" className='stockTickerSearchInput'/>
+                    <input 
+                        onKeyDown={handleKeyDown} 
+                        onChange={handleInputChange} 
+                        type="text" 
+                        placeholder="Search Ticker" 
+                        className='stockTickerSearchInput'
+                    />
                 </div>
+
                 <div className='allHalvesDiv'>
                     <div className='firstHalfDiv'>
                         <div className="stockHeaderContainer">
-                            <StockHeader ticker={currentTicker} price={currentTickerPrice}></StockHeader>
+                            <StockHeader ticker={currentTicker} price={currentTickerPrice} />
                         </div>
+
                         <div className='stockVisualizationContainer'>
-                            <StockVisualization prices={chartData}></StockVisualization>
+                            <StockVisualization prices={chartData} />
                         </div>
+
                         <div className='addStockContainer'>
-                            <AddStock addStockFunc={addStockToWishlist} tickerName={currentTicker} ></AddStock>
+                            <AddStock addStockFunc={addStockToWishlist} tickerName={currentTicker} />
                         </div>
-                   </div>
-                <div className='secondHalfDiv'>
-                    <div className='stockWatchlistContainer'>
-                        <StockWatchlist listOfItems={myUser?.myWatchlist || []} onDelete={deleteButton} />
+                    </div>
+
+                    <div className='secondHalfDiv'>
+                        <div className='stockWatchlistContainer'>
+                            <StockWatchlist 
+                                listOfItems={myUser?.myWatchlist || []} 
+                                onDelete={deleteButton} 
+                            />
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
-        </div>  
-            
     );
 }
