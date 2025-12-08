@@ -35,6 +35,7 @@ const transporter = nodemailer.createTransport({
 
 // Wrap in an async IIFE so we can use await.
 async function sendCode(userEmail, randomCode, inputEmail) {
+    console.log("send Code has hit.")
     const info = await transporter.sendMail({
         from: process.env.NODEMAILER_USER,
         to: inputEmail,
@@ -66,6 +67,7 @@ class ForgotPasswordController {
         Once we look for the email in the db. If the email does not exist then it is not a user in the 
         db.
         */
+        console.log("This controller is hit")
         try {
         const sentEmail = req.body.email; 
 
@@ -86,8 +88,9 @@ class ForgotPasswordController {
         const min = 10000000; // Smallest 8-digit number
         const max = 99999999; // Largest 8-digit number
         const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
-
+        console.log("Before send code");
         sendCode(dbEmail, randomCode, sentEmail);
+        console.log("After send code");
 
         const hashedRandomCode = await bcrypt.hash(randomCode.toString(), 10);
 
@@ -106,6 +109,7 @@ class ForgotPasswordController {
         */
         console.log(dbEmail.id);
         await redisClient.set(dbEmail.id, randomCode, { ex: 600 });
+        console.log("Student shii sent 200");
         return res.status(200).json({forSession: dbEmail.id});
 
 
