@@ -1,6 +1,9 @@
 # Use Debian-based Node (NOT Alpine)
 FROM node:18-slim
 
+# Install network tools for debugging (ping, telnet)
+RUN apt-get update && apt-get install -y iputils-ping telnet && rm -rf /var/lib/apt/lists/*
+
 # Set working directory inside container
 WORKDIR /app
 
