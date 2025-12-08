@@ -23,15 +23,15 @@ const redisClient = new Redis({
 
 // Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  service: "gmail",
-  port: 465,
-  secure: true, // true for 465, false for other ports
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // false for port 587
   auth: {
     user: process.env.NODEMAILER_USER,
     pass: process.env.NODEMAILER_PASS,
   },
 });
+
 
 // Wrap in an async IIFE so we can use await.
 async function sendCode(userEmail, randomCode) {
