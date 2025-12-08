@@ -70,6 +70,7 @@ class ForgotPasswordController {
         console.log("This controller is hit")
         try {
         const sentEmail = req.body.email; 
+        console.log(sentEmail);
 
 
         const dbEmail = await prisma.user.findUnique({
