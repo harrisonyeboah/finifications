@@ -25,7 +25,7 @@ const redisClient = new Redis({
 const transporter = nodemailer.createTransport({
   host: "smtp.ethereal.email",
   service: "gmail",
-  port: 587,
+  port: 465,
   secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.NODEMAILER_USER,
