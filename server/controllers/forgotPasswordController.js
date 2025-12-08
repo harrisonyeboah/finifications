@@ -10,6 +10,7 @@ const axios = require('axios');
 const nodemailer = require('nodemailer');
 const session = require('express-session');
 const { Redis } = require('@upstash/redis');
+const { Resend } = require("resend");
 
 
 const redisClient = new Redis({
@@ -18,71 +19,28 @@ const redisClient = new Redis({
 });
 
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
-
-// Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS,
-  },
-  connectionTimeout: 30000, // 30s
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-});
-
-// Optional: verify SMTP connection
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("SMTP connection error:", error);
-  } else {
-    console.log("SMTP server ready");
-  }
-});
-
-/**
- * Sends a password reset code email.
- * Can be called directly from any controller in this file.
- */
-async function sendCode(userEmail, randomCode, inputEmail) {
-  console.log("sendCode is hit.");
+async function sendCodeEmail(to, randomCode) {
   try {
-    console.log("try is hit.");
+    const data = await resend.emails.send({
+      from: "finifications <noreply@yourdomain.com>",
+      to: to,
+      subject: "your password reset code",
+      html: `
+        <h2>your password reset code</h2>
+        <p>your code is: <b>${randomCode} if this email is not in lowercase it is phising.</b></p>
+      `,
+    });
 
-    const info = await Promise.race([
-      transporter.sendMail({
-        from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
-        to: inputEmail,
-        subject: "Password Reset Code",
-        text: `Your password reset code is: ${randomCode}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
-        html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2>Password Reset Request</h2>
-            <p>Your password reset code is:</p>
-            <h1 style="background-color: #f4f4f4; padding: 15px; letter-spacing: 5px;">${randomCode}</h1>
-            <p>This code will expire in <strong>10 minutes</strong>.</p>
-            <p>If you didn't request this reset, please ignore this email.</p>
-          </div>
-        `,
-      }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Email sending timed out")), 30000)
-      ),
-    ]);
-
-    console.log(`Password reset email sent successfully: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
+    console.log("Email sent:", data);
+    return { success: true, data };
   } catch (error) {
-    console.error("Failed to send reset code email:", error.message);
-    throw new Error("Failed to send reset code. Please try again.");
+    console.error("Email error:", error);
+    return { success: false, error };
   }
 }
-
-
 
 
 class ForgotPasswordController {
@@ -123,7 +81,7 @@ class ForgotPasswordController {
         const max = 99999999; // Largest 8-digit number
         const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
         console.log("Before send code");
-        await sendCode(dbEmail, randomCode, sentEmail);
+        await sendCodeEmail(dbEmail, randomCode);
         console.log("After send code");
 
         const hashedRandomCode = await bcrypt.hash(randomCode.toString(), 10);
