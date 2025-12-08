@@ -25,26 +25,70 @@ const redisClient = new Redis({
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // false for port 587
+  secure: false,
   auth: {
     user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS,
+    pass: process.env.NODEMAILER_PASS, // Must be App Password
   },
+  pool: true, // Use pooled connections for better performance
+  maxConnections: 5,
+  rateDelta: 1000, // Limit rate to avoid hitting Gmail limits
+  rateLimit: 5,
+});
+
+// Verify connection on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('SMTP connection error:', error);
+  } else {
+    console.log('SMTP server ready');
+  }
 });
 
 
 // Wrap in an async IIFE so we can use await.
 async function sendCode(userEmail, randomCode, inputEmail) {
-    console.log("send Code has hit.")
-    const info = await transporter.sendMail({
-        from: process.env.NODEMAILER_USER,
-        to: inputEmail,
-        subject: "reset password code",
-        text: `your reset password code is ${randomCode}`, // plain‑text body
-        html: `<b>your reset password code is ${randomCode}. </b>`, // HTML body
-  });
-  console.log(`Email sent to ${inputEmail}`);
+  try {
+    // Validate inputs
+    if (!inputEmail || !randomCode) {
+      throw new Error('Email and code are required');
+    }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(inputEmail)) {
+      throw new Error('Invalid email format');
+    }
+
+    // Optional: verify inputEmail matches userEmail from database
+    if (userEmail && inputEmail !== userEmail) {
+      throw new Error('Email mismatch');
+    }
+
+    const info = await transporter.sendMail({
+      from: `"Your App Name" <${process.env.NODEMAILER_USER}>`,
+      to: inputEmail,
+      subject: "Password Reset Code",
+      text: `Your password reset code is: ${randomCode}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>Password Reset Request</h2>
+          <p>Your password reset code is:</p>
+          <h1 style="background-color: #f4f4f4; padding: 15px; letter-spacing: 5px;">${randomCode}</h1>
+          <p>This code will expire in <strong>10 minutes</strong>.</p>
+          <p>If you didn't request this reset, please ignore this email.</p>
+        </div>
+      `,
+    });
+
+    console.log(`Password reset email sent successfully: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+
+  } catch (error) {
+    console.error('Failed to send reset code email:', error.message);
+    // Don't expose internal errors to users
+    throw new Error('Failed to send reset code. Please try again.');
+  }
 }
 
 
@@ -90,7 +134,7 @@ class ForgotPasswordController {
         const max = 99999999; // Largest 8-digit number
         const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
         console.log("Before send code");
-        sendCode(dbEmail, randomCode, sentEmail);
+        await sendCode(dbEmail, randomCode, sentEmail);
         console.log("After send code");
 
         const hashedRandomCode = await bcrypt.hash(randomCode.toString(), 10);

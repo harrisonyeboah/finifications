@@ -9,7 +9,7 @@ services:
       - ./.env
     volumes:
       - pgdata_finifications:/var/lib/postgresql/data
-      
+
   redis:
     image: redis:7-alpine
     container_name: redis-prod
@@ -19,8 +19,6 @@ services:
     volumes:
       - redisdata:/data
 
-      
-
   server:
     build:
       context: ./server
@@ -28,13 +26,13 @@ services:
     container_name: finifications-server
     restart: always
     env_file:
-      - ./server/.env
+      - ./.env        # root env file
+      - ./server/.env # server-specific env file (overrides root if duplicate)
     ports:
       - "8080:8080"
     depends_on:
       - postgres
     command: sh -c "node prisma-wait.js && npx prisma migrate deploy && npm start"
-
 
   client:
     build:
