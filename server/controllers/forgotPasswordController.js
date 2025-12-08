@@ -42,6 +42,7 @@ async function sendCode(userEmail, randomCode, inputEmail) {
         text: `your reset password code is ${randomCode}`, // plain‑text body
         html: `<b>your reset password code is ${randomCode}. </b>`, // HTML body
   });
+  console.log(`Email sent to ${inputEmail}`);
 
 }
 
