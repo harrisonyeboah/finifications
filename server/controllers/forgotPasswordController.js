@@ -67,10 +67,10 @@ class ForgotPasswordController {
         Once we look for the email in the db. If the email does not exist then it is not a user in the 
         db.
         */
-        console.log("This controller is hit")
+        console.log("This controller is hit");
         try {
         const sentEmail = req.body.email; 
-        console.log(sentEmail);
+        console.log(`My sent email is ${sentEmail}.`);
 
 
         const dbEmail = await prisma.user.findUnique({
@@ -98,16 +98,6 @@ class ForgotPasswordController {
 
 
 
-        /*
-        const code = await prisma.resetCodes.create({
-        data: {
-            email: sentEmail,
-            resetCode: hashedRandomCode,
-            emailId: dbEmail.id,
-            expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes from now
-            },
-        });
-        */
         console.log(dbEmail.id);
         await redisClient.set(dbEmail.id, randomCode, { ex: 600 });
         console.log("Student shii sent 200");
