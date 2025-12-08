@@ -48,18 +48,9 @@ transporter.verify((error, success) => {
 
 // Wrap in an async IIFE so we can use await.
 async function sendCode(userEmail, randomCode, inputEmail) {
+    console.log("sendCode is hit.");
   try {
-    // Validate inputs
-    if (!inputEmail || !randomCode) {
-      throw new Error('Email and code are required');
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(inputEmail)) {
-      throw new Error('Invalid email format');
-    }
-
+    console.log("try is hit.");
     const info = await transporter.sendMail({
       from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
       to: inputEmail,
