@@ -21,39 +21,40 @@ const redisClient = new Redis({
 
 
 
-// Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  port: 465,          // Use SSL
+  secure: true,       // SSL
   auth: {
     user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS,
+    pass: process.env.NODEMAILER_PASS, // Gmail App Password
   },
-  connectionTimeout: 10000, // 10s to connect
-  greetingTimeout: 10000,   // 10s for server greeting
-  socketTimeout: 10000      // 10s socket timeout
+  connectionTimeout: 30000, // 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
 });
 
-
-
-
-// Verify connection on startup
+// Optional: verify transporter on startup
 transporter.verify((error, success) => {
   if (error) {
-    console.error('SMTP connection error:', error);
+    console.error("SMTP connection error:", error);
   } else {
-    console.log('SMTP server ready');
+    console.log("SMTP server ready");
   }
 });
 
-
-async function sendCode(userEmail, randomCode, inputEmail) {
+/**
+ * Sends a password reset code email.
+ * @param {string} userEmail - User email from database (for logging or storage)
+ * @param {string|number} randomCode - The code to send
+ * @param {string} inputEmail - The recipient email (can be same as userEmail)
+ */
+export async function sendCode(userEmail, randomCode, inputEmail) {
   console.log("sendCode is hit.");
   try {
     console.log("try is hit.");
 
-    // Wrap sendMail in a timeout
+    // Wrap sendMail in a 30-second timeout
     const info = await Promise.race([
       transporter.sendMail({
         from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
@@ -71,16 +72,15 @@ async function sendCode(userEmail, randomCode, inputEmail) {
         `,
       }),
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Email sending timed out")), 10000)
-      )
+        setTimeout(() => reject(new Error("Email sending timed out")), 30000)
+      ),
     ]);
 
     console.log(`Password reset email sent successfully: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
-
   } catch (error) {
-    console.error('Failed to send reset code email:', error.message);
-    throw new Error('Failed to send reset code. Please try again.');
+    console.error("Failed to send reset code email:", error.message);
+    throw new Error("Failed to send reset code. Please try again.");
   }
 }
 
