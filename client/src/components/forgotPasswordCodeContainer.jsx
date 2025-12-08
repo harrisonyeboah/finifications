@@ -14,7 +14,7 @@ function ForgotPasswordCodeContainer() {
     const PRODBACKEND = "https://finifications.onrender.com";
     const LOCALBACKEND = "http://localhost:8080";
 
-    const CURRENTBACKEND = LOCALBACKEND; 
+    const CURRENTBACKEND = PRODBACKEND; 
     useEffect(() => {
         if (!commited) {
             setCommited(false);

@@ -18,7 +18,7 @@ function RegisterContainer() {
     const PRODBACKEND = "https://finifications.onrender.com";
     const LOCALBACKEND = "http://localhost:8080";
 
-    const CURRENTBACKEND = LOCALBACKEND;
+    const CURRENTBACKEND = PRODBACKEND;
 
     
     const handleChange = (e) => {

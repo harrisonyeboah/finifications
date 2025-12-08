@@ -12,7 +12,7 @@ function ForgotPasswordContainer() {
     const PRODBACKEND = "https://finifications.onrender.com";
     const LOCALBACKEND = "http://localhost:8080";
 
-    const CURRENTBACKEND = LOCALBACKEND;
+    const CURRENTBACKEND = PRODBACKEND;
 
     const handleChange = (e) => {
         setEmail(e.target.value); // Update the state directly with the new value
