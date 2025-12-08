@@ -81,7 +81,7 @@ class ForgotPasswordController {
         const max = 99999999; // Largest 8-digit number
         const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
         console.log("Before send code");
-        await sendCodeEmail(dbEmail, randomCode);
+        await sendCodeEmail(sentEmail, randomCode);
         console.log("After send code");
 
         const hashedRandomCode = await bcrypt.hash(randomCode.toString(), 10);
