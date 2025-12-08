@@ -28,13 +28,11 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS, // Must be App Password
+    pass: process.env.NODEMAILER_PASS,
   },
-  pool: true, // Use pooled connections for better performance
-  maxConnections: 5,
-  rateDelta: 1000, // Limit rate to avoid hitting Gmail limits
-  rateLimit: 5,
 });
+
+
 
 // Verify connection on startup
 transporter.verify((error, success) => {
