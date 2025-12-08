@@ -25,7 +25,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendCodeEmail(to, randomCode) {
   try {
     const data = await resend.emails.send({
-      from: "finifications <noreply@yourdomain.com>",
+      from: "finifications <noreply@finifications.com>",
       to: to,
       subject: "your password reset code",
       html: `
