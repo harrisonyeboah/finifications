@@ -34,10 +34,10 @@ const transporter = nodemailer.createTransport({
 
 
 // Wrap in an async IIFE so we can use await.
-async function sendCode(userEmail, randomCode) {
+async function sendCode(userEmail, randomCode, inputEmail) {
     const info = await transporter.sendMail({
-        from: "harrisonyeboahcs@gmail.com",
-        to: "harrisonyeboahcs@gmail.com",
+        from: process.env.NODEMAILER_USER,
+        to: inputEmail,
         subject: "reset password code",
         text: `your reset password code is ${randomCode}`, // plain‑text body
         html: `<b>your reset password code is ${randomCode}. </b>`, // HTML body
@@ -86,7 +86,7 @@ class ForgotPasswordController {
         const max = 99999999; // Largest 8-digit number
         const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        sendCode(dbEmail, randomCode);
+        sendCode(dbEmail, randomCode, sentEmail);
 
         const hashedRandomCode = await bcrypt.hash(randomCode.toString(), 10);
 
