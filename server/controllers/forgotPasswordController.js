@@ -30,7 +30,11 @@ const transporter = nodemailer.createTransport({
     user: process.env.NODEMAILER_USER,
     pass: process.env.NODEMAILER_PASS,
   },
+  connectionTimeout: 10000, // 10s to connect
+  greetingTimeout: 10000,   // 10s for server greeting
+  socketTimeout: 10000      // 10s socket timeout
 });
+
 
 
 
@@ -44,36 +48,42 @@ transporter.verify((error, success) => {
 });
 
 
-// Wrap in an async IIFE so we can use await.
 async function sendCode(userEmail, randomCode, inputEmail) {
-    console.log("sendCode is hit.");
+  console.log("sendCode is hit.");
   try {
     console.log("try is hit.");
-    const info = await transporter.sendMail({
-      from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
-      to: inputEmail,
-      subject: "Password Reset Code",
-      text: `Your password reset code is: ${randomCode}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px;">
-          <h2>Password Reset Request</h2>
-          <p>Your password reset code is:</p>
-          <h1 style="background-color: #f4f4f4; padding: 15px; letter-spacing: 5px;">${randomCode}</h1>
-          <p>This code will expire in <strong>10 minutes</strong>.</p>
-          <p>If you didn't request this reset, please ignore this email.</p>
-        </div>
-      `,
-    });
+
+    // Wrap sendMail in a timeout
+    const info = await Promise.race([
+      transporter.sendMail({
+        from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
+        to: inputEmail,
+        subject: "Password Reset Code",
+        text: `Your password reset code is: ${randomCode}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Password Reset Request</h2>
+            <p>Your password reset code is:</p>
+            <h1 style="background-color: #f4f4f4; padding: 15px; letter-spacing: 5px;">${randomCode}</h1>
+            <p>This code will expire in <strong>10 minutes</strong>.</p>
+            <p>If you didn't request this reset, please ignore this email.</p>
+          </div>
+        `,
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Email sending timed out")), 10000)
+      )
+    ]);
 
     console.log(`Password reset email sent successfully: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
 
   } catch (error) {
     console.error('Failed to send reset code email:', error.message);
-    // Don't expose internal errors to users
     throw new Error('Failed to send reset code. Please try again.');
   }
 }
+
 
 
 
