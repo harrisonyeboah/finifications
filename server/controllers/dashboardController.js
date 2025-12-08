@@ -25,11 +25,12 @@ class DashboardController {
 
 
     async authenticate(req, res) {
-
         const token = req.cookies.authToken;
         if (!token) {
+            console.log("No token");
             return res.status(401).json({ message: 'Authentication token missing' });
         }
+        
 
         try {
             const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
@@ -47,12 +48,7 @@ class DashboardController {
         }
 
         try {
-            const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-
-            // I am going to send my text message to my user that he/she is logged in 
-            let phone = decoded.phone;
-            let cleaned = phone.replace(/\D/g, ""); // remove non-digits
-            let formatted = `+1${cleaned}`;         
+            const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);  
 
             // Now I am going to also query in prisma to get the user name and its post then console.log it in react
             
@@ -69,9 +65,10 @@ class DashboardController {
             },
             });
 
+            if (!user) {
+                return res.status(404).json({ message: "User does not exist in db", userName: user, stockWatchlist: watchlist});    
+            }
 
-
-            //sendSMS(formatted, "This is a test to see if utils works. ");
             return res.status(200).json({ message: "Authenticated", userName: user, stockWatchlist: watchlist});   
         } catch(err) {
             console.error("JWT Error:", err);
@@ -93,6 +90,7 @@ class DashboardController {
         // We will try deleting the stock then 
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         console.log(decoded);
+
         const deleted = await prisma.stockWatchlist.delete({
             where: { id: stockId }
         });
@@ -109,6 +107,11 @@ class DashboardController {
 
         return res.status(200).json({ watchlist });
         } catch (err) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError) {
+            if (err.code === 'P2025') {
+                return res.status(404).json({ message: "Item not found" });
+            }
+        }
             console.error(err);
             return res.status(500).json({ error: "Could not delete" });
         }
@@ -116,6 +119,16 @@ class DashboardController {
 
     async getTicker(req, res) {
         try {
+            const today = new Date();
+            const past = new Date();
+            past.setDate(today.getDate() - 30);
+
+            // Format → YYYY-MM-DD
+            const formatDate = (d) =>
+            d.toISOString().split("T")[0];
+
+            const fromDate = formatDate(past);
+            const toDate = formatDate(today);
             const token = req.cookies.authToken;
 
             if (!token) {
@@ -124,40 +137,45 @@ class DashboardController {
             }
 
             const tickerName = req.params.tickerName.toUpperCase();
-
-            // --- FINNHUB PRICE ---
+            // Finnhub quote
             const response = await fetch(
                 `https://finnhub.io/api/v1/quote?symbol=${tickerName}&token=${process.env.FINNHUB_API_KEY}`
             );
 
-            // --- DATE SETUP ---
-            // Get today's date and 7 days ago
-            const today = new Date();
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(today.getDate() - 7);
-
-            // Helper to format date as YYYY-MM-DD
-            const formatDate = (d) => d.toISOString().split("T")[0];
-
-            const fromDate = formatDate(sevenDaysAgo);
-            const toDate = formatDate(today);
-
-            // --- POLYGON DAILY TIMESTAMPS (Free Plan Friendly) ---
-            const timestamp = await fetch(
+            // Polygon OHLC data
+            const timestampRes = await fetch(
                 `https://api.polygon.io/v2/aggs/ticker/${tickerName}/range/1/day/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${process.env.MASSIVE_API_KEY}`
             );
 
-            // --- READ JSON ***ONLY ONCE*** ---
-            const data = await response.json();      // 1st body read
-            const stampData = await timestamp.json(); // 2nd body read (DIFFERENT RESPONSE)
-            
+            // Basic HTTP error check
+            if (response.status !== 200 || timestampRes.status !== 200) {
+                return res.status(404).json({ message: "Stock not found." });
+            }
+
+            // Actual data JSON
+            const data = await response.json();
+            const stampData = await timestampRes.json();
+
+            // Validate Finnhub
+            if (!data || data.error || data.c === null) {
+                return res.status(404).json({ message: "Invalid stock symbol." });
+            }
+
+            // Validate Polygon
+            if (!stampData || !stampData.results || stampData.results.length === 0) {
+                return res.status(404).json({ message: "No historical data available." });
+            }
+
+   
             const myPricesToGraph = stampData.results
             ? stampData.results.map(item => item.c)
             : [];
+
+
             console.log(data);
             console.log(myPricesToGraph);
             // --- RETURN BOTH ---
-            return res.json({ data, myPricesToGraph });
+            return res.status(200).json({ data, myPricesToGraph });
 
         } catch (err) {
             console.error("getTicker error:", err);

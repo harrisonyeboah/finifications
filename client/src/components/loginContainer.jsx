@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 
+
 function LoginContainer() {
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
@@ -12,6 +13,11 @@ function LoginContainer() {
         password: "", 
 
     });
+
+    const PRODBACKEND = "https://finifications.onrender.com";
+    const LOCALBACKEND = "http://localhost:8080";
+
+    const CURRENTBACKEND = LOCALBACKEND;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,7 +32,7 @@ function LoginContainer() {
         // Add form submission logic here
         try {
             // This will send my api call to the backend. 
-            const response = await fetch("https://finifications.onrender.com/api/login", {
+            const response = await fetch(`${CURRENTBACKEND}/api/login`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {
@@ -62,7 +68,7 @@ function LoginContainer() {
                 <input className='loginInput' name="username" onChange={handleChange} type="text" placeholder="username" /><br />
                 <input className='loginInput' name="password" onChange={handleChange} type="password" placeholder="password" /><br />
                 {message && <p className="loginMessage">{message}</p>}
-                <Link className="loginAchor" to="/forgot-password/code"> forgot password (feature currently being developed) </Link>                <br />
+                <Link className="loginAchor" to="/forgot-password"> forgot password </Link>                <br />
                 <Link className="loginAchor" to="/register"> don't have an account? Register </Link>
                 <br />
                 <button className="loginButton" type="submit">Login</button>

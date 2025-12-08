@@ -16,6 +16,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   name: "User"
   objects: {
     watchlist: StockWatchlistPayload<ExtArgs>[]
+    resetCodes: ResetCodesPayload<ExtArgs>[]
   }
   scalars: $Extensions.GetResult<{
     id: string
@@ -58,6 +59,26 @@ export type StockWatchlistPayload<ExtArgs extends $Extensions.Args = $Extensions
  * 
  */
 export type StockWatchlist = runtime.Types.DefaultSelection<StockWatchlistPayload>
+export type ResetCodesPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "ResetCodes"
+  objects: {
+    emailUser: UserPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    email: string
+    emailId: string
+    resetCode: string
+    expiresAt: Date
+  }, ExtArgs["result"]["resetCodes"]>
+  composites: {}
+}
+
+/**
+ * Model ResetCodes
+ * 
+ */
+export type ResetCodes = runtime.Types.DefaultSelection<ResetCodesPayload>
 
 /**
  * Enums
@@ -215,6 +236,16 @@ export class PrismaClient<
     * ```
     */
   get stockWatchlist(): Prisma.StockWatchlistDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.resetCodes`: Exposes CRUD operations for the **ResetCodes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ResetCodes
+    * const resetCodes = await prisma.resetCodes.findMany()
+    * ```
+    */
+  get resetCodes(): Prisma.ResetCodesDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -699,7 +730,8 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    StockWatchlist: 'StockWatchlist'
+    StockWatchlist: 'StockWatchlist',
+    ResetCodes: 'ResetCodes'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -716,7 +748,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'stockWatchlist'
+      modelProps: 'user' | 'stockWatchlist' | 'resetCodes'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -847,6 +879,71 @@ export namespace Prisma {
           count: {
             args: Prisma.StockWatchlistCountArgs<ExtArgs>,
             result: $Utils.Optional<StockWatchlistCountAggregateOutputType> | number
+          }
+        }
+      }
+      ResetCodes: {
+        payload: ResetCodesPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.ResetCodesFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ResetCodesFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>
+          }
+          findFirst: {
+            args: Prisma.ResetCodesFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ResetCodesFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>
+          }
+          findMany: {
+            args: Prisma.ResetCodesFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>[]
+          }
+          create: {
+            args: Prisma.ResetCodesCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>
+          }
+          createMany: {
+            args: Prisma.ResetCodesCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.ResetCodesDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>
+          }
+          update: {
+            args: Prisma.ResetCodesUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>
+          }
+          deleteMany: {
+            args: Prisma.ResetCodesDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ResetCodesUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.ResetCodesUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ResetCodesPayload>
+          }
+          aggregate: {
+            args: Prisma.ResetCodesAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateResetCodes>
+          }
+          groupBy: {
+            args: Prisma.ResetCodesGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ResetCodesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ResetCodesCountArgs<ExtArgs>,
+            result: $Utils.Optional<ResetCodesCountAggregateOutputType> | number
           }
         }
       }
@@ -1033,10 +1130,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     watchlist: number
+    resetCodes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     watchlist?: boolean | UserCountOutputTypeCountWatchlistArgs
+    resetCodes?: boolean | UserCountOutputTypeCountResetCodesArgs
   }
 
   // Custom InputTypes
@@ -1057,6 +1156,14 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountWatchlistArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: StockWatchlistWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountResetCodesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: ResetCodesWhereInput
   }
 
 
@@ -1272,6 +1379,7 @@ export namespace Prisma {
     isPremium?: boolean
     isVerified?: boolean
     watchlist?: boolean | User$watchlistArgs<ExtArgs>
+    resetCodes?: boolean | User$resetCodesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1290,6 +1398,7 @@ export namespace Prisma {
 
   export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     watchlist?: boolean | User$watchlistArgs<ExtArgs>
+    resetCodes?: boolean | User$resetCodesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }
 
@@ -1665,6 +1774,8 @@ export namespace Prisma {
 
     watchlist<T extends User$watchlistArgs<ExtArgs> = {}>(args?: Subset<T, User$watchlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<StockWatchlistPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
+    resetCodes<T extends User$resetCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$resetCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
     private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2038,6 +2149,27 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Enumerable<StockWatchlistScalarFieldEnum>
+  }
+
+
+  /**
+   * User.resetCodes
+   */
+  export type User$resetCodesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    where?: ResetCodesWhereInput
+    orderBy?: Enumerable<ResetCodesOrderByWithRelationInput>
+    cursor?: ResetCodesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<ResetCodesScalarFieldEnum>
   }
 
 
@@ -3025,6 +3157,930 @@ export namespace Prisma {
 
 
   /**
+   * Model ResetCodes
+   */
+
+
+  export type AggregateResetCodes = {
+    _count: ResetCodesCountAggregateOutputType | null
+    _min: ResetCodesMinAggregateOutputType | null
+    _max: ResetCodesMaxAggregateOutputType | null
+  }
+
+  export type ResetCodesMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    emailId: string | null
+    resetCode: string | null
+    expiresAt: Date | null
+  }
+
+  export type ResetCodesMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    emailId: string | null
+    resetCode: string | null
+    expiresAt: Date | null
+  }
+
+  export type ResetCodesCountAggregateOutputType = {
+    id: number
+    email: number
+    emailId: number
+    resetCode: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type ResetCodesMinAggregateInputType = {
+    id?: true
+    email?: true
+    emailId?: true
+    resetCode?: true
+    expiresAt?: true
+  }
+
+  export type ResetCodesMaxAggregateInputType = {
+    id?: true
+    email?: true
+    emailId?: true
+    resetCode?: true
+    expiresAt?: true
+  }
+
+  export type ResetCodesCountAggregateInputType = {
+    id?: true
+    email?: true
+    emailId?: true
+    resetCode?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type ResetCodesAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResetCodes to aggregate.
+     */
+    where?: ResetCodesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResetCodes to fetch.
+     */
+    orderBy?: Enumerable<ResetCodesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ResetCodesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResetCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResetCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ResetCodes
+    **/
+    _count?: true | ResetCodesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ResetCodesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ResetCodesMaxAggregateInputType
+  }
+
+  export type GetResetCodesAggregateType<T extends ResetCodesAggregateArgs> = {
+        [P in keyof T & keyof AggregateResetCodes]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateResetCodes[P]>
+      : GetScalarType<T[P], AggregateResetCodes[P]>
+  }
+
+
+
+
+  export type ResetCodesGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: ResetCodesWhereInput
+    orderBy?: Enumerable<ResetCodesOrderByWithAggregationInput>
+    by: ResetCodesScalarFieldEnum[]
+    having?: ResetCodesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ResetCodesCountAggregateInputType | true
+    _min?: ResetCodesMinAggregateInputType
+    _max?: ResetCodesMaxAggregateInputType
+  }
+
+
+  export type ResetCodesGroupByOutputType = {
+    id: string
+    email: string
+    emailId: string
+    resetCode: string
+    expiresAt: Date
+    _count: ResetCodesCountAggregateOutputType | null
+    _min: ResetCodesMinAggregateOutputType | null
+    _max: ResetCodesMaxAggregateOutputType | null
+  }
+
+  type GetResetCodesGroupByPayload<T extends ResetCodesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<ResetCodesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ResetCodesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ResetCodesGroupByOutputType[P]>
+            : GetScalarType<T[P], ResetCodesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ResetCodesSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    emailId?: boolean
+    resetCode?: boolean
+    expiresAt?: boolean
+    emailUser?: boolean | UserArgs<ExtArgs>
+  }, ExtArgs["result"]["resetCodes"]>
+
+  export type ResetCodesSelectScalar = {
+    id?: boolean
+    email?: boolean
+    emailId?: boolean
+    resetCode?: boolean
+    expiresAt?: boolean
+  }
+
+  export type ResetCodesInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    emailUser?: boolean | UserArgs<ExtArgs>
+  }
+
+
+  type ResetCodesGetPayload<S extends boolean | null | undefined | ResetCodesArgs> = $Types.GetResult<ResetCodesPayload, S>
+
+  type ResetCodesCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<ResetCodesFindManyArgs, 'select' | 'include'> & {
+      select?: ResetCodesCountAggregateInputType | true
+    }
+
+  export interface ResetCodesDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ResetCodes'], meta: { name: 'ResetCodes' } }
+    /**
+     * Find zero or one ResetCodes that matches the filter.
+     * @param {ResetCodesFindUniqueArgs} args - Arguments to find a ResetCodes
+     * @example
+     * // Get one ResetCodes
+     * const resetCodes = await prisma.resetCodes.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ResetCodesFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ResetCodesFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ResetCodes'> extends True ? Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one ResetCodes that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ResetCodesFindUniqueOrThrowArgs} args - Arguments to find a ResetCodes
+     * @example
+     * // Get one ResetCodes
+     * const resetCodes = await prisma.resetCodes.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ResetCodesFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ResetCodesFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first ResetCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesFindFirstArgs} args - Arguments to find a ResetCodes
+     * @example
+     * // Get one ResetCodes
+     * const resetCodes = await prisma.resetCodes.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ResetCodesFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ResetCodesFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ResetCodes'> extends True ? Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first ResetCodes that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesFindFirstOrThrowArgs} args - Arguments to find a ResetCodes
+     * @example
+     * // Get one ResetCodes
+     * const resetCodes = await prisma.resetCodes.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ResetCodesFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ResetCodesFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more ResetCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ResetCodes
+     * const resetCodes = await prisma.resetCodes.findMany()
+     * 
+     * // Get first 10 ResetCodes
+     * const resetCodes = await prisma.resetCodes.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const resetCodesWithIdOnly = await prisma.resetCodes.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ResetCodesFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ResetCodesFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a ResetCodes.
+     * @param {ResetCodesCreateArgs} args - Arguments to create a ResetCodes.
+     * @example
+     * // Create one ResetCodes
+     * const ResetCodes = await prisma.resetCodes.create({
+     *   data: {
+     *     // ... data to create a ResetCodes
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ResetCodesCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, ResetCodesCreateArgs<ExtArgs>>
+    ): Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many ResetCodes.
+     *     @param {ResetCodesCreateManyArgs} args - Arguments to create many ResetCodes.
+     *     @example
+     *     // Create many ResetCodes
+     *     const resetCodes = await prisma.resetCodes.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ResetCodesCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ResetCodesCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ResetCodes.
+     * @param {ResetCodesDeleteArgs} args - Arguments to delete one ResetCodes.
+     * @example
+     * // Delete one ResetCodes
+     * const ResetCodes = await prisma.resetCodes.delete({
+     *   where: {
+     *     // ... filter to delete one ResetCodes
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ResetCodesDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, ResetCodesDeleteArgs<ExtArgs>>
+    ): Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one ResetCodes.
+     * @param {ResetCodesUpdateArgs} args - Arguments to update one ResetCodes.
+     * @example
+     * // Update one ResetCodes
+     * const resetCodes = await prisma.resetCodes.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ResetCodesUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, ResetCodesUpdateArgs<ExtArgs>>
+    ): Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more ResetCodes.
+     * @param {ResetCodesDeleteManyArgs} args - Arguments to filter ResetCodes to delete.
+     * @example
+     * // Delete a few ResetCodes
+     * const { count } = await prisma.resetCodes.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ResetCodesDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ResetCodesDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResetCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ResetCodes
+     * const resetCodes = await prisma.resetCodes.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ResetCodesUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, ResetCodesUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ResetCodes.
+     * @param {ResetCodesUpsertArgs} args - Arguments to update or create a ResetCodes.
+     * @example
+     * // Update or create a ResetCodes
+     * const resetCodes = await prisma.resetCodes.upsert({
+     *   create: {
+     *     // ... data to create a ResetCodes
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ResetCodes we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ResetCodesUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, ResetCodesUpsertArgs<ExtArgs>>
+    ): Prisma__ResetCodesClient<$Types.GetResult<ResetCodesPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of ResetCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesCountArgs} args - Arguments to filter ResetCodes to count.
+     * @example
+     * // Count the number of ResetCodes
+     * const count = await prisma.resetCodes.count({
+     *   where: {
+     *     // ... the filter for the ResetCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends ResetCodesCountArgs>(
+      args?: Subset<T, ResetCodesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ResetCodesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ResetCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ResetCodesAggregateArgs>(args: Subset<T, ResetCodesAggregateArgs>): Prisma.PrismaPromise<GetResetCodesAggregateType<T>>
+
+    /**
+     * Group by ResetCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResetCodesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ResetCodesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ResetCodesGroupByArgs['orderBy'] }
+        : { orderBy?: ResetCodesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ResetCodesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetResetCodesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ResetCodes.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ResetCodesClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    emailUser<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ResetCodes base type for findUnique actions
+   */
+  export type ResetCodesFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * Filter, which ResetCodes to fetch.
+     */
+    where: ResetCodesWhereUniqueInput
+  }
+
+  /**
+   * ResetCodes findUnique
+   */
+  export interface ResetCodesFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ResetCodesFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ResetCodes findUniqueOrThrow
+   */
+  export type ResetCodesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * Filter, which ResetCodes to fetch.
+     */
+    where: ResetCodesWhereUniqueInput
+  }
+
+
+  /**
+   * ResetCodes base type for findFirst actions
+   */
+  export type ResetCodesFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * Filter, which ResetCodes to fetch.
+     */
+    where?: ResetCodesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResetCodes to fetch.
+     */
+    orderBy?: Enumerable<ResetCodesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResetCodes.
+     */
+    cursor?: ResetCodesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResetCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResetCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResetCodes.
+     */
+    distinct?: Enumerable<ResetCodesScalarFieldEnum>
+  }
+
+  /**
+   * ResetCodes findFirst
+   */
+  export interface ResetCodesFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ResetCodesFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ResetCodes findFirstOrThrow
+   */
+  export type ResetCodesFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * Filter, which ResetCodes to fetch.
+     */
+    where?: ResetCodesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResetCodes to fetch.
+     */
+    orderBy?: Enumerable<ResetCodesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResetCodes.
+     */
+    cursor?: ResetCodesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResetCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResetCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResetCodes.
+     */
+    distinct?: Enumerable<ResetCodesScalarFieldEnum>
+  }
+
+
+  /**
+   * ResetCodes findMany
+   */
+  export type ResetCodesFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * Filter, which ResetCodes to fetch.
+     */
+    where?: ResetCodesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResetCodes to fetch.
+     */
+    orderBy?: Enumerable<ResetCodesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ResetCodes.
+     */
+    cursor?: ResetCodesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResetCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResetCodes.
+     */
+    skip?: number
+    distinct?: Enumerable<ResetCodesScalarFieldEnum>
+  }
+
+
+  /**
+   * ResetCodes create
+   */
+  export type ResetCodesCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ResetCodes.
+     */
+    data: XOR<ResetCodesCreateInput, ResetCodesUncheckedCreateInput>
+  }
+
+
+  /**
+   * ResetCodes createMany
+   */
+  export type ResetCodesCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ResetCodes.
+     */
+    data: Enumerable<ResetCodesCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ResetCodes update
+   */
+  export type ResetCodesUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ResetCodes.
+     */
+    data: XOR<ResetCodesUpdateInput, ResetCodesUncheckedUpdateInput>
+    /**
+     * Choose, which ResetCodes to update.
+     */
+    where: ResetCodesWhereUniqueInput
+  }
+
+
+  /**
+   * ResetCodes updateMany
+   */
+  export type ResetCodesUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ResetCodes.
+     */
+    data: XOR<ResetCodesUpdateManyMutationInput, ResetCodesUncheckedUpdateManyInput>
+    /**
+     * Filter which ResetCodes to update
+     */
+    where?: ResetCodesWhereInput
+  }
+
+
+  /**
+   * ResetCodes upsert
+   */
+  export type ResetCodesUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ResetCodes to update in case it exists.
+     */
+    where: ResetCodesWhereUniqueInput
+    /**
+     * In case the ResetCodes found by the `where` argument doesn't exist, create a new ResetCodes with this data.
+     */
+    create: XOR<ResetCodesCreateInput, ResetCodesUncheckedCreateInput>
+    /**
+     * In case the ResetCodes was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ResetCodesUpdateInput, ResetCodesUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ResetCodes delete
+   */
+  export type ResetCodesDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+    /**
+     * Filter which ResetCodes to delete.
+     */
+    where: ResetCodesWhereUniqueInput
+  }
+
+
+  /**
+   * ResetCodes deleteMany
+   */
+  export type ResetCodesDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResetCodes to delete
+     */
+    where?: ResetCodesWhereInput
+  }
+
+
+  /**
+   * ResetCodes without action
+   */
+  export type ResetCodesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResetCodes
+     */
+    select?: ResetCodesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ResetCodesInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -3064,6 +4120,17 @@ export namespace Prisma {
   };
 
   export type StockWatchlistScalarFieldEnum = (typeof StockWatchlistScalarFieldEnum)[keyof typeof StockWatchlistScalarFieldEnum]
+
+
+  export const ResetCodesScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    emailId: 'emailId',
+    resetCode: 'resetCode',
+    expiresAt: 'expiresAt'
+  };
+
+  export type ResetCodesScalarFieldEnum = (typeof ResetCodesScalarFieldEnum)[keyof typeof ResetCodesScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3110,6 +4177,7 @@ export namespace Prisma {
     isPremium?: BoolFilter | boolean
     isVerified?: BoolFilter | boolean
     watchlist?: StockWatchlistListRelationFilter
+    resetCodes?: ResetCodesListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3124,6 +4192,7 @@ export namespace Prisma {
     isPremium?: SortOrder
     isVerified?: SortOrder
     watchlist?: StockWatchlistOrderByRelationAggregateInput
+    resetCodes?: ResetCodesOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = {
@@ -3217,6 +4286,53 @@ export namespace Prisma {
     fulfilled?: BoolWithAggregatesFilter | boolean
   }
 
+  export type ResetCodesWhereInput = {
+    AND?: Enumerable<ResetCodesWhereInput>
+    OR?: Enumerable<ResetCodesWhereInput>
+    NOT?: Enumerable<ResetCodesWhereInput>
+    id?: StringFilter | string
+    email?: StringFilter | string
+    emailId?: StringFilter | string
+    resetCode?: StringFilter | string
+    expiresAt?: DateTimeFilter | Date | string
+    emailUser?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type ResetCodesOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    emailId?: SortOrder
+    resetCode?: SortOrder
+    expiresAt?: SortOrder
+    emailUser?: UserOrderByWithRelationInput
+  }
+
+  export type ResetCodesWhereUniqueInput = {
+    id?: string
+  }
+
+  export type ResetCodesOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    emailId?: SortOrder
+    resetCode?: SortOrder
+    expiresAt?: SortOrder
+    _count?: ResetCodesCountOrderByAggregateInput
+    _max?: ResetCodesMaxOrderByAggregateInput
+    _min?: ResetCodesMinOrderByAggregateInput
+  }
+
+  export type ResetCodesScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ResetCodesScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ResetCodesScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ResetCodesScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    email?: StringWithAggregatesFilter | string
+    emailId?: StringWithAggregatesFilter | string
+    resetCode?: StringWithAggregatesFilter | string
+    expiresAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     firstName: string
@@ -3229,6 +4345,7 @@ export namespace Prisma {
     isPremium?: boolean
     isVerified?: boolean
     watchlist?: StockWatchlistCreateNestedManyWithoutUserInput
+    resetCodes?: ResetCodesCreateNestedManyWithoutEmailUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3243,6 +4360,7 @@ export namespace Prisma {
     isPremium?: boolean
     isVerified?: boolean
     watchlist?: StockWatchlistUncheckedCreateNestedManyWithoutUserInput
+    resetCodes?: ResetCodesUncheckedCreateNestedManyWithoutEmailUserInput
   }
 
   export type UserUpdateInput = {
@@ -3257,6 +4375,7 @@ export namespace Prisma {
     isPremium?: BoolFieldUpdateOperationsInput | boolean
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     watchlist?: StockWatchlistUpdateManyWithoutUserNestedInput
+    resetCodes?: ResetCodesUpdateManyWithoutEmailUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3271,6 +4390,7 @@ export namespace Prisma {
     isPremium?: BoolFieldUpdateOperationsInput | boolean
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     watchlist?: StockWatchlistUncheckedUpdateManyWithoutUserNestedInput
+    resetCodes?: ResetCodesUncheckedUpdateManyWithoutEmailUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3374,6 +4494,61 @@ export namespace Prisma {
     fulfilled?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type ResetCodesCreateInput = {
+    id?: string
+    email: string
+    resetCode: string
+    expiresAt: Date | string
+    emailUser: UserCreateNestedOneWithoutResetCodesInput
+  }
+
+  export type ResetCodesUncheckedCreateInput = {
+    id?: string
+    email: string
+    emailId: string
+    resetCode: string
+    expiresAt: Date | string
+  }
+
+  export type ResetCodesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailUser?: UserUpdateOneRequiredWithoutResetCodesNestedInput
+  }
+
+  export type ResetCodesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailId?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResetCodesCreateManyInput = {
+    id?: string
+    email: string
+    emailId: string
+    resetCode: string
+    expiresAt: Date | string
+  }
+
+  export type ResetCodesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResetCodesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailId?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter = {
     equals?: string
     in?: Enumerable<string> | string
@@ -3426,12 +4601,22 @@ export namespace Prisma {
     none?: StockWatchlistWhereInput
   }
 
+  export type ResetCodesListRelationFilter = {
+    every?: ResetCodesWhereInput
+    some?: ResetCodesWhereInput
+    none?: ResetCodesWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type StockWatchlistOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ResetCodesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3616,6 +4801,30 @@ export namespace Prisma {
     _max?: NestedEnumConditionFilter
   }
 
+  export type ResetCodesCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    emailId?: SortOrder
+    resetCode?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type ResetCodesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    emailId?: SortOrder
+    resetCode?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type ResetCodesMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    emailId?: SortOrder
+    resetCode?: SortOrder
+    expiresAt?: SortOrder
+  }
+
   export type StockWatchlistCreateNestedManyWithoutUserInput = {
     create?: XOR<Enumerable<StockWatchlistCreateWithoutUserInput>, Enumerable<StockWatchlistUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<StockWatchlistCreateOrConnectWithoutUserInput>
@@ -3623,11 +4832,25 @@ export namespace Prisma {
     connect?: Enumerable<StockWatchlistWhereUniqueInput>
   }
 
+  export type ResetCodesCreateNestedManyWithoutEmailUserInput = {
+    create?: XOR<Enumerable<ResetCodesCreateWithoutEmailUserInput>, Enumerable<ResetCodesUncheckedCreateWithoutEmailUserInput>>
+    connectOrCreate?: Enumerable<ResetCodesCreateOrConnectWithoutEmailUserInput>
+    createMany?: ResetCodesCreateManyEmailUserInputEnvelope
+    connect?: Enumerable<ResetCodesWhereUniqueInput>
+  }
+
   export type StockWatchlistUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<Enumerable<StockWatchlistCreateWithoutUserInput>, Enumerable<StockWatchlistUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<StockWatchlistCreateOrConnectWithoutUserInput>
     createMany?: StockWatchlistCreateManyUserInputEnvelope
     connect?: Enumerable<StockWatchlistWhereUniqueInput>
+  }
+
+  export type ResetCodesUncheckedCreateNestedManyWithoutEmailUserInput = {
+    create?: XOR<Enumerable<ResetCodesCreateWithoutEmailUserInput>, Enumerable<ResetCodesUncheckedCreateWithoutEmailUserInput>>
+    connectOrCreate?: Enumerable<ResetCodesCreateOrConnectWithoutEmailUserInput>
+    createMany?: ResetCodesCreateManyEmailUserInputEnvelope
+    connect?: Enumerable<ResetCodesWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -3660,6 +4883,20 @@ export namespace Prisma {
     deleteMany?: Enumerable<StockWatchlistScalarWhereInput>
   }
 
+  export type ResetCodesUpdateManyWithoutEmailUserNestedInput = {
+    create?: XOR<Enumerable<ResetCodesCreateWithoutEmailUserInput>, Enumerable<ResetCodesUncheckedCreateWithoutEmailUserInput>>
+    connectOrCreate?: Enumerable<ResetCodesCreateOrConnectWithoutEmailUserInput>
+    upsert?: Enumerable<ResetCodesUpsertWithWhereUniqueWithoutEmailUserInput>
+    createMany?: ResetCodesCreateManyEmailUserInputEnvelope
+    set?: Enumerable<ResetCodesWhereUniqueInput>
+    disconnect?: Enumerable<ResetCodesWhereUniqueInput>
+    delete?: Enumerable<ResetCodesWhereUniqueInput>
+    connect?: Enumerable<ResetCodesWhereUniqueInput>
+    update?: Enumerable<ResetCodesUpdateWithWhereUniqueWithoutEmailUserInput>
+    updateMany?: Enumerable<ResetCodesUpdateManyWithWhereWithoutEmailUserInput>
+    deleteMany?: Enumerable<ResetCodesScalarWhereInput>
+  }
+
   export type StockWatchlistUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<StockWatchlistCreateWithoutUserInput>, Enumerable<StockWatchlistUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<StockWatchlistCreateOrConnectWithoutUserInput>
@@ -3672,6 +4909,20 @@ export namespace Prisma {
     update?: Enumerable<StockWatchlistUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<StockWatchlistUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<StockWatchlistScalarWhereInput>
+  }
+
+  export type ResetCodesUncheckedUpdateManyWithoutEmailUserNestedInput = {
+    create?: XOR<Enumerable<ResetCodesCreateWithoutEmailUserInput>, Enumerable<ResetCodesUncheckedCreateWithoutEmailUserInput>>
+    connectOrCreate?: Enumerable<ResetCodesCreateOrConnectWithoutEmailUserInput>
+    upsert?: Enumerable<ResetCodesUpsertWithWhereUniqueWithoutEmailUserInput>
+    createMany?: ResetCodesCreateManyEmailUserInputEnvelope
+    set?: Enumerable<ResetCodesWhereUniqueInput>
+    disconnect?: Enumerable<ResetCodesWhereUniqueInput>
+    delete?: Enumerable<ResetCodesWhereUniqueInput>
+    connect?: Enumerable<ResetCodesWhereUniqueInput>
+    update?: Enumerable<ResetCodesUpdateWithWhereUniqueWithoutEmailUserInput>
+    updateMany?: Enumerable<ResetCodesUpdateManyWithWhereWithoutEmailUserInput>
+    deleteMany?: Enumerable<ResetCodesScalarWhereInput>
   }
 
   export type UserCreateNestedOneWithoutWatchlistInput = {
@@ -3698,6 +4949,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutWatchlistInput
     connect?: UserWhereUniqueInput
     update?: XOR<UserUpdateWithoutWatchlistInput, UserUncheckedUpdateWithoutWatchlistInput>
+  }
+
+  export type UserCreateNestedOneWithoutResetCodesInput = {
+    create?: XOR<UserCreateWithoutResetCodesInput, UserUncheckedCreateWithoutResetCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutResetCodesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutResetCodesNestedInput = {
+    create?: XOR<UserCreateWithoutResetCodesInput, UserUncheckedCreateWithoutResetCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutResetCodesInput
+    upsert?: UserUpsertWithoutResetCodesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutResetCodesInput, UserUncheckedUpdateWithoutResetCodesInput>
   }
 
   export type NestedStringFilter = {
@@ -3892,6 +5157,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ResetCodesCreateWithoutEmailUserInput = {
+    id?: string
+    email: string
+    resetCode: string
+    expiresAt: Date | string
+  }
+
+  export type ResetCodesUncheckedCreateWithoutEmailUserInput = {
+    id?: string
+    email: string
+    resetCode: string
+    expiresAt: Date | string
+  }
+
+  export type ResetCodesCreateOrConnectWithoutEmailUserInput = {
+    where: ResetCodesWhereUniqueInput
+    create: XOR<ResetCodesCreateWithoutEmailUserInput, ResetCodesUncheckedCreateWithoutEmailUserInput>
+  }
+
+  export type ResetCodesCreateManyEmailUserInputEnvelope = {
+    data: Enumerable<ResetCodesCreateManyEmailUserInput>
+    skipDuplicates?: boolean
+  }
+
   export type StockWatchlistUpsertWithWhereUniqueWithoutUserInput = {
     where: StockWatchlistWhereUniqueInput
     update: XOR<StockWatchlistUpdateWithoutUserInput, StockWatchlistUncheckedUpdateWithoutUserInput>
@@ -3920,6 +5209,33 @@ export namespace Prisma {
     fulfilled?: BoolFilter | boolean
   }
 
+  export type ResetCodesUpsertWithWhereUniqueWithoutEmailUserInput = {
+    where: ResetCodesWhereUniqueInput
+    update: XOR<ResetCodesUpdateWithoutEmailUserInput, ResetCodesUncheckedUpdateWithoutEmailUserInput>
+    create: XOR<ResetCodesCreateWithoutEmailUserInput, ResetCodesUncheckedCreateWithoutEmailUserInput>
+  }
+
+  export type ResetCodesUpdateWithWhereUniqueWithoutEmailUserInput = {
+    where: ResetCodesWhereUniqueInput
+    data: XOR<ResetCodesUpdateWithoutEmailUserInput, ResetCodesUncheckedUpdateWithoutEmailUserInput>
+  }
+
+  export type ResetCodesUpdateManyWithWhereWithoutEmailUserInput = {
+    where: ResetCodesScalarWhereInput
+    data: XOR<ResetCodesUpdateManyMutationInput, ResetCodesUncheckedUpdateManyWithoutResetCodesInput>
+  }
+
+  export type ResetCodesScalarWhereInput = {
+    AND?: Enumerable<ResetCodesScalarWhereInput>
+    OR?: Enumerable<ResetCodesScalarWhereInput>
+    NOT?: Enumerable<ResetCodesScalarWhereInput>
+    id?: StringFilter | string
+    email?: StringFilter | string
+    emailId?: StringFilter | string
+    resetCode?: StringFilter | string
+    expiresAt?: DateTimeFilter | Date | string
+  }
+
   export type UserCreateWithoutWatchlistInput = {
     id?: string
     firstName: string
@@ -3931,6 +5247,7 @@ export namespace Prisma {
     dateJoined?: Date | string
     isPremium?: boolean
     isVerified?: boolean
+    resetCodes?: ResetCodesCreateNestedManyWithoutEmailUserInput
   }
 
   export type UserUncheckedCreateWithoutWatchlistInput = {
@@ -3944,6 +5261,7 @@ export namespace Prisma {
     dateJoined?: Date | string
     isPremium?: boolean
     isVerified?: boolean
+    resetCodes?: ResetCodesUncheckedCreateNestedManyWithoutEmailUserInput
   }
 
   export type UserCreateOrConnectWithoutWatchlistInput = {
@@ -3967,6 +5285,7 @@ export namespace Prisma {
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetCodes?: ResetCodesUpdateManyWithoutEmailUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWatchlistInput = {
@@ -3980,6 +5299,73 @@ export namespace Prisma {
     dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
     isPremium?: BoolFieldUpdateOperationsInput | boolean
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetCodes?: ResetCodesUncheckedUpdateManyWithoutEmailUserNestedInput
+  }
+
+  export type UserCreateWithoutResetCodesInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    userName: string
+    password: string
+    email: string
+    phone?: string | null
+    dateJoined?: Date | string
+    isPremium?: boolean
+    isVerified?: boolean
+    watchlist?: StockWatchlistCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutResetCodesInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    userName: string
+    password: string
+    email: string
+    phone?: string | null
+    dateJoined?: Date | string
+    isPremium?: boolean
+    isVerified?: boolean
+    watchlist?: StockWatchlistUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutResetCodesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutResetCodesInput, UserUncheckedCreateWithoutResetCodesInput>
+  }
+
+  export type UserUpsertWithoutResetCodesInput = {
+    update: XOR<UserUpdateWithoutResetCodesInput, UserUncheckedUpdateWithoutResetCodesInput>
+    create: XOR<UserCreateWithoutResetCodesInput, UserUncheckedCreateWithoutResetCodesInput>
+  }
+
+  export type UserUpdateWithoutResetCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
+    isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    watchlist?: StockWatchlistUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutResetCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateJoined?: DateTimeFieldUpdateOperationsInput | Date | string
+    isPremium?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    watchlist?: StockWatchlistUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StockWatchlistCreateManyUserInput = {
@@ -3988,6 +5374,13 @@ export namespace Prisma {
     notifyPrice?: number | null
     condition: Condition
     fulfilled?: boolean
+  }
+
+  export type ResetCodesCreateManyEmailUserInput = {
+    id?: string
+    email: string
+    resetCode: string
+    expiresAt: Date | string
   }
 
   export type StockWatchlistUpdateWithoutUserInput = {
@@ -4012,6 +5405,27 @@ export namespace Prisma {
     notifyPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     condition?: EnumConditionFieldUpdateOperationsInput | Condition
     fulfilled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ResetCodesUpdateWithoutEmailUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResetCodesUncheckedUpdateWithoutEmailUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResetCodesUncheckedUpdateManyWithoutResetCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    resetCode?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

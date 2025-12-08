@@ -14,6 +14,13 @@ function RegisterContainer() {
         phone: ""
     });
 
+
+    const PRODBACKEND = "https://finifications.onrender.com";
+    const LOCALBACKEND = "http://localhost:8080";
+
+    const CURRENTBACKEND = LOCALBACKEND;
+
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserInfo((prev) => ({
@@ -26,19 +33,27 @@ function RegisterContainer() {
         e.preventDefault();
         try {
             if (userInfo.password.length < 8) {
+                setMessage("Password must be at least 8 characters long");
                 throw new Error("Password must be at least 8 characters long");
             } 
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfo.email)) {
+                setMessage("Invalid email format");
                 throw new Error("Invalid email format");
             }
             if (!/^\d{3}-\d{3}-\d{4}$/.test(userInfo.phone)) {
+                setMessage("Phone number must be in 123-456-7890");
                 throw new Error("Phone number must be in the format 123-456-7890");
             } 
             if (userInfo.firstName === "" || userInfo.lastName === "" || userInfo.username === "" || userInfo.password === "" || userInfo.email === "" || userInfo.phone === "") {
+                setMessage("All fields are required");
                 throw new Error("All fields are required");
             }
+            if (userInfo.password !== userInfo.confirmPassword) {
+                setMessage("Passwords do not match");
+                throw new Error("Passwords do not match");
+            }
 
-            const response = await fetch("https://finifications.onrender.com/api/register", {
+            const response = await fetch(`${CURRENTBACKEND}/api/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -48,6 +63,7 @@ function RegisterContainer() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                setMessage("User can not register"); // This basically means there is probably a bug in the backend.
                 throw new Error(errorData.message || "Registration failed");
             } else {
                 navigate('/login'); 
@@ -59,7 +75,8 @@ function RegisterContainer() {
                 firstName: "",
                 lastName: "",
                 username: "",
-                password: "", 
+                password: "",
+                confirmPassword: "",
                 email: "",
                 phone: ""
             });
@@ -77,6 +94,7 @@ function RegisterContainer() {
                 <input name="lastName" className='registerInput' onChange={handleChange} value={userInfo.lastName} type="text" placeholder="Last Name" /><br />
                 <input name="username" className='registerInput' onChange={handleChange} value={userInfo.username} type="text" placeholder="Username" /><br />
                 <input name="password" className='registerInput' onChange={handleChange} value={userInfo.password} type="password" placeholder="Password" /><br />
+                <input name="confirmPassword" className='registerInput' onChange={handleChange} value={userInfo.confirmPassword} type="password" placeholder="Confirm Password" /><br />
                 <input name="email" className='registerInput' onChange={handleChange} value={userInfo.email} type="email" placeholder="Email Address" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Enter a valid email address" required/><br />
                 <input name="phone" className='registerInput' onChange={handleChange} value={userInfo.phone} type="tel" placeholder="676-767-6767" pattern="^\d{3}-\d{3}-\d{4}$" title="Format: 123-456-7890" required/><br />
                 {message && <p className="registerMessage">{message}</p>}

@@ -1,7 +1,12 @@
 import Navbar from '../components/navbar.jsx';
 import ForgotPasswordContainer from '../components/forgotPasswordContainer.jsx';
 import "../Styles/ForgotPassword.css";
+import {useEffect, useState} from 'react';
+
 export default function ForgotPasswordPage() {
+    useEffect(() => {
+    document.title = "Forgot Password - Finifications";
+    }, []);
     return (
         <div>
             <Navbar></Navbar>

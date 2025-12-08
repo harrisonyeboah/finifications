@@ -65,6 +65,9 @@ class LoginController {
             res.status(500).json({ message: 'Internal server error' });
         }
     }
+    async forgotPasswordCode (req, res) {
+
+    }
 }
 
 module.exports = LoginController;

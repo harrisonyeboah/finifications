@@ -1,6 +1,7 @@
 // Importing my dependencies
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AppProvider } from "./context/AppContext.jsx";
 
 // Import my styles 
 import './App.css';
@@ -27,25 +28,26 @@ function App() {
     }, []);
 
     return (
-        <div className="App">
-        <Router>
-            <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+        <AppProvider>
+            <div className="App">
+                <Router>
+                    <Routes>
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
 
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/forgot-password/code" element={<ForgotPasswordCodePage />} />
-                <Route path="/forgot-password/new" element={<ForgotPasswordNewPasswordPage />} />
+                        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                        <Route path="/forgot-password/code" element={<ForgotPasswordCodePage />} />
+                        <Route path="/forgot-password/new" element={<ForgotPasswordNewPasswordPage />} />
 
-                <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
 
-                {/* Default redirect to login */}
-                <Route path="*" element={<LoginPage />} />
-                
-            </Routes>
-        </Router>
-
-        </div>
+                        {/* Default redirect to login */}
+                        <Route path="*" element={<LoginPage />} />
+                        
+                    </Routes>
+                </Router>
+            </div>
+        </AppProvider>
     );
 }
 

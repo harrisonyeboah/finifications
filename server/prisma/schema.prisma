@@ -24,6 +24,7 @@ model User {
   isVerified Boolean  @default(false)
 
   watchlist  StockWatchlist[] // This allows for our joins
+  resetCodes ResetCodes[] // For our join
 }
 
 
@@ -44,4 +45,18 @@ model StockWatchlist {
 
   @@index([userId])
 }
+
+model ResetCodes {
+  id        String   @id @default(uuid())
+  email     String
+  emailId   String
+  resetCode String
+  expiresAt DateTime
+
+  emailUser User     @relation(fields: [emailId], references: [id])
+}
+
+
+
+
 

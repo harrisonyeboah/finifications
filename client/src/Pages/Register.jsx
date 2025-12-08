@@ -1,7 +1,11 @@
 import Navbar from '../components/navbar.jsx';
 import RegisterContainer from '../components/registerContainer.jsx';
 import "../Styles/Register.css";
+import { useEffect } from 'react';
 export default function RegisterPage() {
+    useEffect(() => {
+            document.title = "Register - Finifications";
+    }, []);
     return (
         <div>
             <Navbar></Navbar>

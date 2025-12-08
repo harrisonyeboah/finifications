@@ -1,5 +1,4 @@
 // server.js
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -8,6 +7,7 @@ const { PrismaClient } = require('./src/generated/client');
 const RegistrationController = require('./controllers/registrationController.js');
 const LoginController = require('./controllers/loginController.js');
 const DashboardController = require('./controllers/dashboardController.js');
+const ForgotPasswordController = require('./controllers/forgotPasswordController.js');
 
 // Initialize Express app
 const app = express();
@@ -40,11 +40,13 @@ const prisma = new PrismaClient();
 const registrationController = new RegistrationController(prisma);
 const loginController = new LoginController(prisma);
 const dashboardController = new DashboardController(prisma);
+const forgotPasswordController = new ForgotPasswordController(prisma);
 
 // Register routes
 app.use('/', registrationController.router);
 app.use('/', loginController.router);
 app.use('/', dashboardController.router);
+app.use('/', forgotPasswordController.router);
 
 // Health check and test routes
 app.get('/api/hello', (req, res) => res.json({ message: 'Hello from the server!' }));

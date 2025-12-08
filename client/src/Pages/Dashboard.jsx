@@ -28,12 +28,16 @@ export default function Dashboard() {
     const [currentTickerPrice, setCurrentTickerPrice] = useState(0);
     const [chartData, setChartData] = useState([]);
 
-    const BACKEND = "https://finifications.onrender.com";
+    const PRODBACKEND = "https://finifications.onrender.com";
+    const LOCALBACKEND = "http://localhost:8080";
+
+    const CURRENTBACKEND = LOCALBACKEND;
+
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await fetch(`${BACKEND}/api/authenticate`, {
+                const response = await fetch(`${CURRENTBACKEND}/api/authenticate`, {
                     method: "GET",
                     credentials: "include"
                 });
@@ -51,12 +55,12 @@ export default function Dashboard() {
     useEffect(() => {
         const getData = async ()=> {
             try {
-                const response = await fetch(`${BACKEND}/api/getUserInfo`, {
+                const response = await fetch(`${CURRENTBACKEND}/api/getUserInfo`, {
                     method: "GET",
                     credentials: "include"
                 });
+                const data = await response.json();
                 if (response.status === 200) {
-                    const data = await response.json();
                     setMyUser(prev => ({
                         ...prev,
                         userName: data.userName.userName,
@@ -69,7 +73,7 @@ export default function Dashboard() {
         };
         getData();
     },[]);
-    
+
     useEffect(() => {
         async function fetchPrice() {
             const price = await priceState();
@@ -85,7 +89,7 @@ export default function Dashboard() {
     }, []);
 
     const deleteButton = async (stockId) => {
-        const response = await fetch(`${BACKEND}/api/deleteButton`, {
+        const response = await fetch(`${CURRENTBACKEND}/api/deleteButton`, {
             method: "POST",
             credentials: 'include',
             headers: {
@@ -116,7 +120,7 @@ export default function Dashboard() {
 
     const getTicker = async (tickerName) => {
         const response = await fetch(
-            `${BACKEND}/api/getTicker/${tickerName}`,
+            `${CURRENTBACKEND}/api/getTicker/${tickerName}`,
             {
                 method: "GET",
                 credentials: "include"
@@ -133,6 +137,11 @@ export default function Dashboard() {
             setChartData(graphArray);
 
             return data.data.c;
+        } else if (response.status === 404) {
+            setMessage(data.message);
+            if (data.message == "No historical data available.") {
+                setChartData([]); // Last line of defense.
+            }
         }
         return 0;
     };
@@ -146,7 +155,7 @@ export default function Dashboard() {
         if ((condition === "ABOVE" && notifyPrice > currentTickerPrice) || 
             (condition === "BELOW" && notifyPrice < currentTickerPrice)) {
 
-            const response = await fetch(`${BACKEND}/api/addStockToWishlist`, {
+            const response = await fetch(`${CURRENTBACKEND}/api/addStockToWishlist`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

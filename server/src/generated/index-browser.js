@@ -127,6 +127,14 @@ exports.Prisma.StockWatchlistScalarFieldEnum = {
   fulfilled: 'fulfilled'
 };
 
+exports.Prisma.ResetCodesScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  emailId: 'emailId',
+  resetCode: 'resetCode',
+  expiresAt: 'expiresAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -148,7 +156,8 @@ exports.Condition = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  StockWatchlist: 'StockWatchlist'
+  StockWatchlist: 'StockWatchlist',
+  ResetCodes: 'ResetCodes'
 };
 
 /**
