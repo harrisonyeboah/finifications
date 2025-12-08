@@ -18,10 +18,14 @@ import Dashboard from './Pages/Dashboard.jsx';
 function App() {
     const [message, setMessage] = useState('');
     const [data, setData] = useState(null);
+    const PRODBACKEND = "https://finifications.onrender.com";
+    const LOCALBACKEND = "http://localhost:8080";
+
+    const CURRENTBACKEND = PRODBACKEND;
 
     useEffect(() => {
         // Example: Fetch data from the server
-        fetch('http://localhost:8080/api/hello')
+        fetch(`${PRODBACKEND}/api/hello`)
             .then(response => response.json())
             .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));
