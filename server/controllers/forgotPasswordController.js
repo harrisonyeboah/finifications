@@ -60,13 +60,8 @@ async function sendCode(userEmail, randomCode, inputEmail) {
       throw new Error('Invalid email format');
     }
 
-    // Optional: verify inputEmail matches userEmail from database
-    if (userEmail && inputEmail !== userEmail) {
-      throw new Error('Email mismatch');
-    }
-
     const info = await transporter.sendMail({
-      from: `"Your App Name" <${process.env.NODEMAILER_USER}>`,
+      from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
       to: inputEmail,
       subject: "Password Reset Code",
       text: `Your password reset code is: ${randomCode}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
