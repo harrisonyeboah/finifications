@@ -21,20 +21,21 @@ const redisClient = new Redis({
 
 
 
+// Nodemailer transporter
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,          // Use SSL
-  secure: true,       // SSL
+  port: 465,
+  secure: true, // SSL
   auth: {
     user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS, // Gmail App Password
+    pass: process.env.NODEMAILER_PASS,
   },
-  connectionTimeout: 30000, // 30 seconds
+  connectionTimeout: 30000, // 30s
   greetingTimeout: 30000,
   socketTimeout: 30000,
 });
 
-// Optional: verify transporter on startup
+// Optional: verify SMTP connection
 transporter.verify((error, success) => {
   if (error) {
     console.error("SMTP connection error:", error);
@@ -45,16 +46,13 @@ transporter.verify((error, success) => {
 
 /**
  * Sends a password reset code email.
- * @param {string} userEmail - User email from database (for logging or storage)
- * @param {string|number} randomCode - The code to send
- * @param {string} inputEmail - The recipient email (can be same as userEmail)
+ * Can be called directly from any controller in this file.
  */
-export async function sendCode(userEmail, randomCode, inputEmail) {
+async function sendCode(userEmail, randomCode, inputEmail) {
   console.log("sendCode is hit.");
   try {
     console.log("try is hit.");
 
-    // Wrap sendMail in a 30-second timeout
     const info = await Promise.race([
       transporter.sendMail({
         from: `"Finifications" <${process.env.NODEMAILER_USER}>`,
@@ -83,9 +81,6 @@ export async function sendCode(userEmail, randomCode, inputEmail) {
     throw new Error("Failed to send reset code. Please try again.");
   }
 }
-
-
-
 
 
 
