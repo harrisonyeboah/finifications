@@ -11,9 +11,9 @@ finifications/
 docker-compose.yml
 ```
 
-## Getting Started
+## getting started
 
-### Prerequisites
+### prerequisites
 
 - you will need prequisites of Node js 14
 - npm or yarn
@@ -61,12 +61,12 @@ npm run dev
 
 The Express server will run on `http://localhost:8080`
 
-## API Endpoints
+## api Endpoints
 
 - `GET /api/hello` - this if these two controllers run 200
 - `GET /api/health` - and this controller runs 200 then you the application works.
 
-## Development
+## development
 
 you must cd into finifications and have two terminals open. at once
 
