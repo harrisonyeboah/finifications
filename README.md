@@ -2,10 +2,10 @@
 
 this is my finififactions finance based notifiations application that I started developing in november 2025
 
-## Project Structure
+## project Structure
 
 ```
-FinancePushNotifications/
+finifications/
 ├── client/          # React frontend application
 └── server/          # Node.js/Express backend server
 docker-compose.yml
