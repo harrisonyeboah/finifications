@@ -61,7 +61,7 @@ npm run dev
 
 The Express server will run on `http://localhost:8080`
 
-## api Endpoints
+## api endpoints
 
 - `GET /api/hello` - this if these two controllers run 200
 - `GET /api/health` - and this controller runs 200 then you the application works.
