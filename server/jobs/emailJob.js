@@ -12,7 +12,7 @@ async function getQuote(tickerName) {
   const data = await response.json();
   console.log(data.c);
   return data.c;
-}
+} // Yessir
 
 
 const sendEmailToAllUsers = async () => {
