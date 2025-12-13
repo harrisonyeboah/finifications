@@ -32,6 +32,7 @@ function LoginContainer() {
         // Add form submission logic here
         try {
             // This will send my api call to the backend. 
+            console.log(process.env.CURRENT_BACKEND);
             const response = await fetch(`${CURRENTBACKEND}/api/login`, {
                 method: "POST",
                 credentials: 'include',

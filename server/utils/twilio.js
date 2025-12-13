@@ -1,5 +1,5 @@
 // smsTest.js
-/*
+
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); // adjust path if needed
 const twilio = require('twilio');
@@ -17,11 +17,13 @@ if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 // Send SMS function
+console.log(" Hey ")
+console.log(process.env.TWILIO_PHONE_NUMBER);
 async function sendSMS(to, message) {
   try {
     const res = await client.messages.create({
       body: message,
-      from: TWILIO_PHONE_NUMBER,
+      from: process.env.TWILIO_PHONE_NUMBER,
       to: to,
     });
     console.log("✅ SMS Sent! SID:", res.sid);
@@ -32,7 +34,7 @@ async function sendSMS(to, message) {
   }
 }
 
-// List verified outgoing numbers (useful for trial accounts)
+/*
 async function listVerifiedNumbers() {
   try {
     const numbers = await client.outgoingCallerIds.list();
@@ -46,14 +48,11 @@ async function listVerifiedNumbers() {
     console.error("Error fetching verified numbers:", err);
   }
 }
+*/
 
 // Example usage
 (async () => {
-  console.log("Listing verified numbers first...");
-  await listVerifiedNumbers();
-
   console.log("\nSending test SMS...");
   // Replace with a verified number if on a trial account
-  await sendSMS("+17738176657", "Hello from Twilio test!");
+  await sendSMS("+17738176657", "Hello from Twilio test! from api.");
 })();
-*/

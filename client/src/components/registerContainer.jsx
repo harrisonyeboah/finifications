@@ -18,7 +18,7 @@ function RegisterContainer() {
     const PRODBACKEND = "https://finifications.onrender.com";
     const LOCALBACKEND = "http://localhost:8080";
 
-    const CURRENTBACKEND = PRODBACKEND;
+    const CURRENTBACKEND = LOCALBACKEND;
 
     
     const handleChange = (e) => {
@@ -40,10 +40,11 @@ function RegisterContainer() {
                 setMessage("Invalid email format");
                 throw new Error("Invalid email format");
             }
-            if (!/^\d{3}-\d{3}-\d{4}$/.test(userInfo.phone)) {
-                setMessage("Phone number must be in 123-456-7890");
-                throw new Error("Phone number must be in the format 123-456-7890");
-            } 
+            if (!/^\d{10}$/.test(userInfo.phone)) {
+                setMessage("Phone number must be in the format 1231231234");
+                throw new Error("Phone number must be in the format 1231231234");
+            }
+
             if (userInfo.firstName === "" || userInfo.lastName === "" || userInfo.username === "" || userInfo.password === "" || userInfo.email === "" || userInfo.phone === "") {
                 setMessage("All fields are required");
                 throw new Error("All fields are required");
@@ -96,7 +97,7 @@ function RegisterContainer() {
                 <input name="password" className='registerInput' onChange={handleChange} value={userInfo.password} type="password" placeholder="Password" /><br />
                 <input name="confirmPassword" className='registerInput' onChange={handleChange} value={userInfo.confirmPassword} type="password" placeholder="Confirm Password" /><br />
                 <input name="email" className='registerInput' onChange={handleChange} value={userInfo.email} type="email" placeholder="Email Address" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Enter a valid email address" required/><br />
-                <input name="phone" className='registerInput' onChange={handleChange} value={userInfo.phone} type="tel" placeholder="676-767-6767" pattern="^\d{3}-\d{3}-\d{4}$" title="Format: 123-456-7890" required/><br />
+                <input name="phone" className='registerInput' onChange={handleChange} value={userInfo.phone} type="tel" placeholder="6767676767" pattern="^\d{10}$" title="Format: 1234567890" required/><br />
                 {message && <p className="registerMessage">{message}</p>}
                 <Link className="loginAchor" to="/login"> I already have an account login </Link>
                 <br />

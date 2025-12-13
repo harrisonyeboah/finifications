@@ -19,12 +19,13 @@ class DashboardController {
         this.router.get('/api/authenticate', this.authenticate.bind(this));
         this.router.get('/api/getUserInfo', this.getUserInfo.bind(this));
         this.router.post('/api/deleteButton', this.deleteButton.bind(this));
-        this.router.get('/api/getTicker/:tickerName', this.getTicker.bind(this));
+        this.router.post('/api/getTicker/:tickerName', this.getTicker.bind(this));
         this.router.post('/api/addStockToWishlist', this.addStockToWatchlist.bind(this));
     }
 
 
     async authenticate(req, res) {
+        console.log("Controller is hit");
         const token = req.cookies.authToken;
         if (!token) {
             console.log("No token");
@@ -118,10 +119,21 @@ class DashboardController {
     }
 
     async getTicker(req, res) {
+        console.log("ticker hit")
         try {
+            const stateDate = req.body.wayBackDate;
+            console.log(stateDate);
             const today = new Date();
             const past = new Date();
-            past.setDate(today.getDate() - 30);
+            if (stateDate == 7) {
+                past.setDate(today.getDate() - 7);
+            } else if (stateDate == 14) {
+                past.setDate(today.getDate() - 14);
+            } else if (stateDate == 21) {
+                past.setDate(today.getDate() - 21);
+            } else {
+                past.setDate(today.getDate() - 7);
+            }
 
             // Format → YYYY-MM-DD
             const formatDate = (d) =>

@@ -27,6 +27,7 @@ export default function Dashboard() {
     const [currentTicker, setCurrentTicker] = useState(myUser.myWatchlist?.[0]?.stockTicker || "aapl");
     const [currentTickerPrice, setCurrentTickerPrice] = useState(0);
     const [chartData, setChartData] = useState([]);
+    const [wayBackDate, setwayBackDate] = useState(7);
 
     const PRODBACKEND = "https://finifications.onrender.com";
     const LOCALBACKEND = "http://localhost:8080";
@@ -80,7 +81,7 @@ export default function Dashboard() {
             setCurrentTickerPrice(price);
         }
         fetchPrice();
-    }, []);
+    }, [wayBackDate]);
     
 
     useEffect(() => {
@@ -122,10 +123,15 @@ export default function Dashboard() {
         const response = await fetch(
             `${CURRENTBACKEND}/api/getTicker/${tickerName}`,
             {
-                method: "GET",
-                credentials: "include"
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ wayBackDate })
             }
         );
+
 
         const data = await response.json();
         if (response.status === 200) {
@@ -150,6 +156,8 @@ export default function Dashboard() {
         const price = getTicker(currentTicker);
         return price;
     };
+
+    
 
     const addStockToWishlist = async (stockToAdd, notifyPrice, condition) => {
         if ((condition === "ABOVE" && notifyPrice > currentTickerPrice) || 
@@ -180,6 +188,12 @@ export default function Dashboard() {
         setMessage("Can not add to wishlist.");
     };
 
+    const changeTimeLine = async (changeTo) => {
+        console.log("funciton fired");
+        console.log(changeTo);
+        setwayBackDate(changeTo);
+    }
+
     return (
         <div>
             <div className='dashboardMainContainer'>
@@ -199,7 +213,7 @@ export default function Dashboard() {
                 <div className='allHalvesDiv'>
                     <div className='firstHalfDiv'>
                         <div className="stockHeaderContainer">
-                            <StockHeader ticker={currentTicker} price={currentTickerPrice} />
+                            <StockHeader ticker={currentTicker} price={currentTickerPrice} changeTimeLine={changeTimeLine} />
                         </div>
 
                         <div className='stockVisualizationContainer'>

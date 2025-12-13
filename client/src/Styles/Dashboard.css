@@ -202,6 +202,25 @@
 .watchlistHeader {
     background-color: #ffffff;
 }
+.buttonDiv {
+    display: flex;
+    margin-left: 20px;
+}
+.dateButton {
+    margin-right: 20px;
+    color: #a1887f;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: .5rem;
+    cursor: pointer;
+    border: none;
+}
+
+.dateButton:hover {
+    color: #555555;
+    transition: 1s;
+    font-size: .75rem;
+}
 /* RESPONSIVENESS */
 @media (max-width: 720px) {
     .allHalvesDiv {
