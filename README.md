@@ -1,56 +1,57 @@
-# Finance Push Notifications
+# finifications
 
-A client-server application with React frontend and Node.js/Express backend.
+this is my finififactions finance based notifiations application that I started developing in november 2025
 
-## Project Structure
+## project Structure
 
 ```
-FinancePushNotifications/
+finifications/
 ├── client/          # React frontend application
 └── server/          # Node.js/Express backend server
+docker-compose.yml
 ```
 
-## Getting Started
+## getting started
 
-### Prerequisites
+### prerequisites
 
-- Node.js (v14 or higher)
+- you will need prequisites of Node js 14
 - npm or yarn
 
-### Client Setup
+### enter the client 
 
-1. Navigate to the client directory:
+1. use bash and cd client
 ```bash
 cd client
 ```
 
-2. Install dependencies:
+2. to install dependancies you need to go to the linux bash and:
 ```bash
 npm install
 ```
 
-3. Start the development server:
+3. to start the development server bash npm start:
 ```bash
 npm start
 ```
 
-The React app will run on `http://localhost:3000`
+for local environment you host this on `http://localhost:3000`
 
-### Server Setup
+### for server set up
 
-1. Navigate to the server directory:
+1. navigate to the server directory bashing cd server:
 ```bash
 cd server
 ```
 
-2. Install dependencies:
+2. to install dependencies bash ->:
 ```bash
 npm install
 ```
 
-3. Start the server:
+3. in order to start the server bash node server:
 ```bash
-npm start
+node server
 ```
 
 For development with auto-reload:
@@ -58,18 +59,15 @@ For development with auto-reload:
 npm run dev
 ```
 
-The Express server will run on `http://localhost:3001`
+The Express server will run on `http://localhost:8080`
 
-## API Endpoints
+## api endpoints
 
-- `GET /api/hello` - Test endpoint that returns a greeting message
-- `GET /api/health` - Health check endpoint
+- `GET /api/hello` - this if these two controllers run 200
+- `GET /api/health` - and this controller runs 200 then you the application works.
 
-## Development
+## development
 
-The client and server should be run in separate terminal windows/tabs for development.
+you must cd into finifications and have two terminals open. at once
 
 
-
-1. Go to the client folder and run 
-npm install 
