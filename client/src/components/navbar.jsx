@@ -5,7 +5,6 @@ function Navbar() {
     return (
         <div className="navbarDiv">
             <h1 clasName="logoName"> finifications </h1>
-            <a className="settingsAnchor" href="/"> Settings </a>
         </div>
     );
 }
