@@ -19,15 +19,16 @@ services:
     volumes:
       - redisdata:/data
       
-  daily-email-job:
-    image: node:20-alpine
-    volumes:
-      - .:/app
-    working_dir: /app
-    entrypoint: ["/bin/sh", "-c"]
-    command: |
-      echo "0 17 * * * cd /app && node server/jobs/emailJob.js" > /etc/crontabs/root \
-      && crond -f -l 8
+    daily-email-job:
+      image: node:20-alpine
+      volumes:
+        - .:/app
+      working_dir: /app
+      entrypoint: ["/bin/sh", "-c"]
+      command: |
+        echo "*/5 * * * * cd /app && node server/jobs/emailJob.js >> /var/log/cron.log 2>&1" > /etc/crontabs/root \
+        && crond -f -l 8
+
 
   server:
     build:

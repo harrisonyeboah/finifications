@@ -1,6 +1,8 @@
 // Importing my dependencies
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
+import { messaging } from "../firebase";
+import { getToken, onMessage } from "firebase/messaging";
 
 // Importing my styles
 import "../Styles/Dashboard.css";
@@ -20,7 +22,7 @@ export default function Dashboard() {
         userName:"", 
         myWatchlist: []
     });
-
+    const socketRef = useRef(null);
     const [isConnected, setIsConnected] = useState(false);
     const [message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
@@ -28,9 +30,14 @@ export default function Dashboard() {
     const [currentTickerPrice, setCurrentTickerPrice] = useState(0);
     const [chartData, setChartData] = useState([]);
     const [wayBackDate, setwayBackDate] = useState(7);
+    const [token, setToken] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authChecked, setAuthChecked] = useState(false);
 
     const PRODBACKEND = "https://finifications.onrender.com";
     const LOCALBACKEND = "http://localhost:8080";
+    const LOCALWEBSOCKET = "ws://localhost:8080/ws";
+    const PRODWEBSOCKET = "wss://finifications.onrender.com/ws";
 
     const CURRENTBACKEND = PRODBACKEND;
 
@@ -43,18 +50,64 @@ export default function Dashboard() {
                     credentials: "include"
                 });
                 if (response.status !== 200) {
+                    setIsAuthenticated(false);
                     navigate('/login');
+                } else {
+                    setIsAuthenticated(true);
                 }
             } catch (error) {
                 console.error("Error checking authentication:", error);
+                setIsAuthenticated(false);
                 navigate('/login');
+                
+            } finally {
+                setAuthChecked(true);
             }
         };
         checkAuth();
     }, []);
 
     useEffect(() => {
+        //if (isAuthenticated === false) return;
+        /* This will connect to to my websocket in the backedn */
+        // Local host 8080 or production
+        socketRef.current = new WebSocket(
+        `${LOCALWEBSOCKET}?symbol=${currentTicker}`
+        );
+        // This will get my websocket messsage. 
+        socketRef.current.onmessage = (event) => {
+        const payload = JSON.parse(event.data);
+        
+        // This will get the response type and run accordingly.
+        if (payload.type === "CONNECTED") {
+            console.log("WebSocket connected");
+        };
+
+        if (payload.type === "subscribe") {
+            console.log("Subscribed to finhub for:", payload.symbol);
+        }
+
+        if (payload.type === "PRICE_UPDATE") {
+            const trade = payload.data[0];
+            console.log("Price update received:", trade.price);
+            setCurrentTickerPrice(trade.price); 
+        }
+
+        // We would want to handle errors and then maybe redirect the user to regurlar http requests.
+        socketRef.current.onerror = (err) => {
+        console.error("Frontend WS error:", err);
+        };
+
+        return () => {
+        socketRef.current?.close();
+        };
+    }}, [currentTicker]);
+
+
+
+    useEffect(() => {
         const getData = async ()=> {
+            //if (isAuthenticated === false) return;
             try {
                 const response = await fetch(`${CURRENTBACKEND}/api/getUserInfo`, {
                     method: "GET",
@@ -76,6 +129,7 @@ export default function Dashboard() {
     },[]);
 
     useEffect(() => {
+        //if (isAuthenticated === false) return;
         async function fetchPrice() {
             const price = await priceState();
             setCurrentTickerPrice(price);
@@ -85,11 +139,42 @@ export default function Dashboard() {
     
 
     useEffect(() => {
+        //if (isAuthenticated === false) return;
         document.title = "Dashboard - Finifications";
         setMessage("Welcome to Finifications Developed by Harrison Yeboah Student at Denison University. ")
     }, []);
 
+    useEffect(() => {
+        //if (isAuthenticated === false) return;
+        const requestPermission = async () => {
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission !== "granted") return console.log("Permission denied");
+
+            const currentToken = await getToken(messaging, {
+            vapidKey: "<YOUR_WEB_PUSH_CERTIFICATE_KEY_PAIR>",
+            });
+
+            console.log("FCM Token:", currentToken);
+            setToken(currentToken);
+        } catch (error) {
+            console.error("Error getting FCM token:", error);
+        }
+        };
+
+        requestPermission();
+
+        // Listen for messages when app is in foreground
+        onMessage(messaging, (payload) => {
+        console.log("Message received:", payload);
+        new Notification(payload.notification.title, {
+            body: payload.notification.body,
+        });
+        });
+    }, []);
+
     const deleteButton = async (stockId) => {
+        //if (isAuthenticated === false) return;
         const response = await fetch(`${CURRENTBACKEND}/api/deleteButton`, {
             method: "POST",
             credentials: 'include',
@@ -100,6 +185,7 @@ export default function Dashboard() {
         }); 
 
         if (response.status === 200) {
+            //if (isAuthenticated === false) return;
             const data = await response.json();
             setMyUser(prev => ({
                 ...prev,
@@ -109,6 +195,7 @@ export default function Dashboard() {
     };
 
     const handleKeyDown = (e) => {
+        //if (isAuthenticated === false) return;
         if (e.key === 'Enter') {
             getTicker(inputValue);
             setInputValue('');
@@ -116,10 +203,12 @@ export default function Dashboard() {
     };
 
     const handleInputChange = (e) => {
+        //if (isAuthenticated === false) return;
         setInputValue(e.target.value);
     };
 
     const getTicker = async (tickerName) => {
+        //if (isAuthenticated === false) return;
         const response = await fetch(
             `${CURRENTBACKEND}/api/getTicker/${tickerName}`,
             {
@@ -131,6 +220,9 @@ export default function Dashboard() {
                 body: JSON.stringify({ wayBackDate })
             }
         );
+        if (response.status !== 200) {
+            console.log("Error fetching ticker data");
+        }
 
 
         const data = await response.json();
@@ -153,6 +245,7 @@ export default function Dashboard() {
     };
 
     const priceState = () => {
+        //Authenticated === false) return;
         const price = getTicker(currentTicker);
         return price;
     };
@@ -160,6 +253,7 @@ export default function Dashboard() {
     
 
     const addStockToWishlist = async (stockToAdd, notifyPrice, condition) => {
+        //if (isAuthenticated === false) return;
         if ((condition === "ABOVE" && notifyPrice > currentTickerPrice) || 
             (condition === "BELOW" && notifyPrice < currentTickerPrice)) {
 
@@ -189,8 +283,7 @@ export default function Dashboard() {
     };
 
     const changeTimeLine = async (changeTo) => {
-        console.log("funciton fired");
-        console.log(changeTo);
+        //if (isAuthenticated === false) return;
         setwayBackDate(changeTo);
     }
 
@@ -238,3 +331,5 @@ export default function Dashboard() {
         </div>
     );
 }
+
+

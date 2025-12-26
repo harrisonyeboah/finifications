@@ -9,8 +9,21 @@ const LoginController = require('./controllers/loginController.js');
 const DashboardController = require('./controllers/dashboardController.js');
 const ForgotPasswordController = require('./controllers/forgotPasswordController.js');
 
+
+const http = require('http');
+const WebSocket = require('ws');
+const WebSocketController = require('./controllers/webSocketController.js');
+
+
+// Firebase admin initialization
+const admin = require('./utils/firebase.js');
+
 // Initialize Express app
 const app = express();
+
+const server = http.createServer(app);
+
+
 
 // Middleware
 app.use(cors({
@@ -42,6 +55,17 @@ const loginController = new LoginController(prisma);
 const dashboardController = new DashboardController(prisma);
 const forgotPasswordController = new ForgotPasswordController(prisma);
 
+
+// WebSocket setup
+const wss = new WebSocket.Server({ server, path: '/ws' });
+
+const wsController = new WebSocketController(prisma);
+
+wss.on('connection', (ws, req) => {
+  console.log('Incoming WebSocket connection:', req.url);
+  wsController.handleConnection(ws, req);
+});
+
 // Register routes
 app.use('/', registrationController.router);
 app.use('/', loginController.router);
@@ -67,7 +91,7 @@ app.get("/test-db", async (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 

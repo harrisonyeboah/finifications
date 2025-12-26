@@ -25,10 +25,8 @@ class DashboardController {
 
 
     async authenticate(req, res) {
-        console.log("Controller is hit");
         const token = req.cookies.authToken;
         if (!token) {
-            console.log("No token");
             return res.status(401).json({ message: 'Authentication token missing' });
         }
         
@@ -80,17 +78,17 @@ class DashboardController {
         const token = req.cookies.authToken;
 
         if (!token) {
-            console.log("No token");
+
             return res.status(401).json({ message: "No token found" });
         }
         const stockIdDict = req.body;
         const stockId = stockIdDict.stockId;
-        console.log(stockId);
+
         
         try {
         // We will try deleting the stock then 
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-        console.log(decoded);
+
 
         const deleted = await prisma.stockWatchlist.delete({
             where: { id: stockId }
@@ -104,7 +102,6 @@ class DashboardController {
                 userId: decoded.userId,  
             },
         });
-        console.log("My new watch list is ", watchlist);
 
         return res.status(200).json({ watchlist });
         } catch (err) {
@@ -119,10 +116,8 @@ class DashboardController {
     }
 
     async getTicker(req, res) {
-        console.log("ticker hit")
         try {
             const stateDate = req.body.wayBackDate;
-            console.log(stateDate);
             const today = new Date();
             const past = new Date();
             if (stateDate == 7) {
@@ -144,7 +139,6 @@ class DashboardController {
             const token = req.cookies.authToken;
 
             if (!token) {
-                console.log("No token");
                 return res.status(401).json({ message: "No token found" });
             }
 
@@ -183,9 +177,6 @@ class DashboardController {
             ? stampData.results.map(item => item.c)
             : [];
 
-
-            console.log(data);
-            console.log(myPricesToGraph);
             // --- RETURN BOTH ---
             return res.status(200).json({ data, myPricesToGraph });
 
@@ -196,10 +187,8 @@ class DashboardController {
     }
     async addStockToWatchlist(req, res) {
         const token = req.cookies.authToken; // Always make sure that the user has a token when they enter. 
-        console.log("MY CONTROLLER IS HIT");
 
         if (!token) {
-            console.log("No token");
             return res.status(401).json({ message: "No token found" });
         }
         const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET); 
