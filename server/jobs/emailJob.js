@@ -13,6 +13,10 @@ const FINNHUB_TIMEOUT = 4000;
 const FINNHUB_BATCH_SIZE = 50; // safe for free tier
 
 
+  const data = await response.json();
+  console.log(data.c);
+  return data.c;
+} // Yessir
 
 async function getQuote(ticker) {
   const controller = new AbortController();
