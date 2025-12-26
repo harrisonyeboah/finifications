@@ -6,6 +6,7 @@ export default function RegisterPage() {
     useEffect(() => {
             document.title = "Register - Finifications";
     }, []);
+    // This is it 
     return (
         <div>
             <Navbar></Navbar>

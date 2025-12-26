@@ -7,6 +7,7 @@ export default function ForgotPasswordPage() {
     useEffect(() => {
     document.title = "Forgot Password - Finifications";
     }, []);
+    // This is it 
     return (
         <div>
             <Navbar></Navbar>

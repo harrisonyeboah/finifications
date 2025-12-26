@@ -20,6 +20,7 @@ async function main() {
       await new Promise(res => setTimeout(res, 3000)); // wait 3 seconds
     }
   }
+  // This is it
 
   console.error('🔥 Could not connect to database after max retries');
   process.exit(1);

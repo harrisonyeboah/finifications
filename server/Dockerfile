@@ -30,3 +30,4 @@ EXPOSE 8080
 
 # Command to wait for Postgres, deploy migrations, and start server
 CMD ["sh", "-c", "node prisma-wait.js && npx prisma migrate deploy && npm start"]
+# This is it

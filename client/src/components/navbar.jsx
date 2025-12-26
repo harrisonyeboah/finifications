@@ -7,5 +7,6 @@ function Navbar() {
             <h1 clasName="logoName"> finifications </h1>
         </div>
     );
+    // This is it 
 }
 export default Navbar;

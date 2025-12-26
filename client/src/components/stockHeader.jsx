@@ -2,6 +2,7 @@ import "../Styles/Dashboard.css";
 function StockHeader(props) {
     const { ticker, price, changeTimeLine } = props;
     return (
+        // This is it 
         <div className='stockHeaderBox'>
             <h1> {ticker} </h1>
             <h3> ${price} </h3>

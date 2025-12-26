@@ -41,7 +41,7 @@ export default function Dashboard() {
 
     const CURRENTBACKEND = PRODBACKEND;
 
-
+    // This is it 
     useEffect(() => {
         const checkAuth = async () => {
             try {

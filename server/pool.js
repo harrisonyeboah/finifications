@@ -8,5 +8,5 @@ const pool = new Pool({
   password: '5155',         // the password you set
   port: 5432,               // default Postgres port
 });
-
+// This is it
 module.exports = pool;

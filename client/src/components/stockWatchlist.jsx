@@ -8,6 +8,7 @@ function StockWatchlistItem(props) {
         </div>
     );  
 }
+// This is it 
 function StockWatchlist({listOfItems = [], onDelete}) {
     /* This is dummy static data for now */
     return (

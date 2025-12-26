@@ -12,7 +12,7 @@ const session = require('express-session');
 const { Redis } = require('@upstash/redis');
 const { Resend } = require("resend");
 
-
+// This is it 
 const redisClient = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,

@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const nodemailer = require("nodemailer");
 
+// This is it 
 // Configure your transporter (SMTP)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com", 

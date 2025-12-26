@@ -4,6 +4,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getMessaging } from "firebase/messaging";
 
 // This is the firebase configuration for the front end. 
+// This is it 
 const firebaseConfig = {
   apiKey: "AIzaSyCv25bd2eQ445WbFsZ-LKKBhljzLTuCqqM",
   authDomain: "finifications.firebaseapp.com",

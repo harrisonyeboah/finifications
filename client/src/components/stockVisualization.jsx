@@ -9,6 +9,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+// This is it 
+
 const StockVisualization = ({ prices }) => {
   // Generate dates going backward from today
   const today = new Date();

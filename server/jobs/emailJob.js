@@ -3,7 +3,7 @@
 require("dotenv").config();
 const { PrismaClient } = require("../src/generated");
 const { Resend } = require("resend");
-
+// This is it 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 

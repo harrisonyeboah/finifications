@@ -1,5 +1,6 @@
 // main.js (CommonJS)
 const { messaging, getToken, onMessage } = require("./firebase");
+// This is it 
 
 async function requestPermission() {
   try {

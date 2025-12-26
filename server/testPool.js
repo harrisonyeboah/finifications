@@ -11,5 +11,5 @@ async function testConnection() {
     await pool.end(); // close all connections
   }
 }
-
+// This is the test connection
 testConnection();

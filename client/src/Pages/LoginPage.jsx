@@ -6,6 +6,7 @@ export default function LoginPage() {
     useEffect(() => {
             document.title = "Login - Finifications";
     }, []);
+    // This is it 
     return (
         <div>
             <Navbar></Navbar>

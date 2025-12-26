@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function AddStock({ addStockFunc, tickerName }) {
     const [price, setPrice] = useState(""); // Notify price
     const [selected, setSelected] = useState(null);
+    // This is it
 
     const optionLabels = {
         option1: "ABOVE",
