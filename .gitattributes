@@ -1,0 +1,5 @@
+*.js linguist-language=JavaScript
+*.cpp linguist-vendored
+*.h linguist-vendored
+node_modules/* linguist-vendored
+dist/* linguist-generated
